@@ -24,7 +24,7 @@ const environment = process.env.NODE_ENV;
 const app = express();
 const server = http.Server(app);
 const mappedOpenRoutes = mapRoutes(config.publicRoutes, 'api/controllers/');
-const mappedAuthRoutes = mapRoutes(config.privateRoutes, 'api/controllers/');
+const mappedAuthRoutes = mapRoutes(config.authRoutes, 'api/controllers/');
 const mappedRechargeRoutes = mapRoutes(config.rechargeRoutes, 'api/controllers/');
 const mappedPaymentRoutes = mapRoutes(config.paymentRoutes, 'api/controllers/');
 const DB = dbService(environment, config.migrate).start();
@@ -49,6 +49,7 @@ app.use(bodyParser.json());
 
 // fill routes for express application
 app.use('/public', mappedOpenRoutes);
+app.use('/auth', mappedAuthRoutes);
 app.use('/private', mappedAuthRoutes);
 app.use('/recharge', mappedRechargeRoutes);
 app.use('/payment', mappedPaymentRoutes);

@@ -23,19 +23,37 @@ const User = sequelize.define('User', {
     primaryKey: true,
     unique: true,
   },
+  password: {
+    type: Sequelize.STRING,
+    required: true
+  },
   userName: {
+    type: Sequelize.STRING,
+  },
+  displayName: {
     type: Sequelize.STRING,
   },
   userType: {
     type: Sequelize.STRING,
   },
-  eCoin: {
+  userRole: {
     type: Sequelize.INTEGER,
   },
   email: {
     type: Sequelize.STRING,
   },
-}, { hooks, tableName });
+}, {
+    hooks,
+    tableName,
+    instanceMethods: {
+      generateHash(password) {
+          return bcrypt.hash(password, bcrypt.genSaltSync(8));
+      },
+      validPassword(password) {
+          return bcrypt.compare(password, this.password);
+      }
+  }
+ });
 
 // instead of using instanceMethod
 // in sequelize > 4 we are writing the function
