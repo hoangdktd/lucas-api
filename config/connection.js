@@ -5,7 +5,7 @@ const dbConnection = {
     // host: '/cloudsql/sdss-payment:asia-east1:sdsspayment',
 
     databasename: 'lucasdb',
-    username: 'lucas',
+    username: 'binhmuc',
     password: '123456',
     host: 'localhost',
 }

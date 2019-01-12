@@ -1,6 +1,6 @@
 const authRoutes = {
-    'POST /register': 'authController.register',
-    'POST /login': 'authController.login'
+    'POST /login': 'authController.login',
+    'POST /': 'authController.register',
 };
   
 module.exports = authRoutes;

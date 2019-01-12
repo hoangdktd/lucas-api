@@ -4,5 +4,6 @@ module.exports = {
     serverError: 'Internal server error',
     serverSuccess: 'success',
     serverErrorCode: 500,
-    serverSuccessCode: 200
+    serverSuccessCode: 200,
+    token: 'X-Access-Token'
 };

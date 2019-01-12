@@ -4,111 +4,116 @@ const authService = require('../services/auth.service');
 const oRest = require('../utils/restware');
 const oConstant = require('../utils/constant');
 const bcryptService = require('../services/bcrypt.service');
+
 let userTypeList = ['admin', 'saler', 'deliver', 'designer']
 
 const UserController = () => {
   const update = async (req, res) => {
     const { body } = req;
-    const { query } = req;
-    const { token } = req;
-
+    const { params } = req;
     console.log('Backend recieve API UPDATE USER: ');
-    console.log('userId ========    ' + query.userId);
-    try {
-      var user = await User.findOne({
-        where: {
-          userId: query.userId
-        },
-      });
-      if(!user) {
-        return res.status(400).json({  msg: 'User is not exist' });
-      } else {
-        user.email = body.email;
-        user.userType = body.userType;
-        user.displayName =  body.displayName;
-        user.userRole = body.userRole;
-        user.userType = userTypeList[body.userRole];
-        let updateUser = await user.update({});
-        const token = authService().issue({ userId: updateUser.userId, role: updateUser.userRole }); // need check jwt hoangdktd
-        return res.status(200).json({  token, "user": updateUser });
+    console.log('userId ========    ' + params.userId);
+    await userManager.get(
+      params,
+      async function (errorCode, errorMessage, httpCode, user) {
+        if (errorCode) {
+            return oRest.sendError(res, errorCode, errorMessage, httpCode);
+        };
+        await userManager.update(
+          { user: user, body: body},
+          function (errorCode, errorMessage, httpCode, returnUser) {
+            if (errorCode) {
+                return oRest.sendError(res, errorCode, errorMessage, httpCode);
+            }
+            let oResData = {};
+            oResData.data = {};
+            oResData.data.user = returnUser;
+            oResData.data.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
+            return oRest.sendSuccess(res, oResData, httpCode);
+          }
+        );
       }
-    }catch (err) {
-      console.log(err);
-      return res.status(500).json({ msg: 'Internal server error' });
-    }
-
-    return res.status(400).json({ msg: 'Bad Request: Cannot update user now, try later' });
-  };
-  
+    )  
+  }
+ 
   const deleteUser = async (req, res) => {
     const { body } = req;
-    const { query } = req;
+    const { params } = req;
     const { token } = req;
     console.log(req);
     console.log('Backend recieve API DELETE USER: ');
-    console.log('userId ========    ' + query.userId);
+    console.log('userId ========    ' + params.userId);
 
     if (token.role > 0) {
       return res.status(400).json({  msg: 'Only admin can delete new user' });
     }
-
-    try {
-      rowdeleted =  await User.destroy({
-         where: {
-            userId: query.userId //this will be your id that you want to delete
-         }
-      });
-      if (rowdeleted > 0){
-        return res.status(200).json({  msg: 'Delete success' });
-      } else {
-        return res.status(400).json({  msg: 'Cannot find user with id '   + query.userId });
+    await userManager.delete(
+      params,
+      function (errorCode, errorMessage, httpCode, returnData) {
+        if (errorCode) {
+            return oRest.sendError(res, errorCode, errorMessage, httpCode);
+        }
+        let oResData = {}; 
+        return oRest.sendSuccess(res, oResData, httpCode);
       }
-      
-    }catch (err) {
-      console.log(err);
-      return res.status(500).json({ msg: 'Internal server error' });
-    }
-
-    return res.status(400).json({ msg: 'Bad Request: Cannot detele user now, try later' });
+    )
   }
+
   const changePassword = async (req, res) => {
     const { body } = req;
-    const { query } = req;
-    const { token } = req;
+    const { params } = req;
+    const token  = req.header('X-Access-Token');
     console.log(req);
     console.log('Backend recieve API CHANGE PASS USER: ');
-    console.log('userId ========    ' + query.userId);
-    try {
-      user =  await User.findOne({
-         where: {
-            userId: query.userId //this will be your id that you want to delete
-         }
-      });
-      if (!user){
-        return res.status(404).json({  msg: 'Cannot find user' });
-      } else {
-        if ((bcryptService().comparePassword(body.oldPassword, user.password))){
-          user.password = body.newPassword;
-          user.password = bcryptService().password(user);
-          let updateUser = await user.update({});
-          const token = authService().issue({ userId: updateUser.userId, role: user.userRole }); // need check jwt hoangdktd
-          return res.status(200).json({  token, "user": updateUser });
-        } else {
-            return res.status(200).json({  msg: 'Wrong password' });
+    console.log('userId ========    ' + params.userId);
+    await userManager.get(
+      params,
+      async function (errorCode, errorMessage, httpCode, returnUser) {
+        if (errorCode) {
+            return oRest.sendError(res, errorCode, errorMessage, httpCode);
         }
+        if ((bcryptService().comparePassword(body.oldPassword, returnUser.password))){
+          returnUser.password = body.newPassword;
+          returnUser.password = bcryptService().password(returnUser);
+          await userManager.update(
+            returnUser,
+            function (errorCode, errorMessage, httpCode, returnNewUser) {
+              if (errorCode) {
+                  return oRest.sendError(res, errorCode, errorMessage, httpCode);
+              }
+              let oResData = {};
+              oResData.data = {};
+              oResData.data.user = returnNewUser;
+              oResData.data.token = authService().issue({ userId: returnNewUser.userId, role: returnNewUser.userRole });
+              return oRest.sendSuccess(res, oResData, httpCode);
+            }
+          );
+        } 
       }
-      
-    }catch (err) {
-      console.log(err);
-      return res.status(500).json({ msg: 'Internal server error' });
-    }
-
-    return res.status(400).json({ msg: 'Bad Request: Cannot change password user now, try later' });
+    )
+  }
+  const getOne = async (req, res) => {
+    const { params } = req;
+    await userManager.get(
+      params,
+      function (errorCode, errorMessage, httpCode, returnUser) {
+        if (errorCode) {
+            return oRest.sendError(res, errorCode, errorMessage, httpCode);
+        }
+        const token = authService().issue({ userId: returnUser.id, role: returnUser.userRole }); // need check jwt hoangdktd
+        let oResData = {};
+        oResData.data = {};
+        oResData.data.token = token;
+        oResData.data.user = returnUser;
+        return oRest.sendSuccess(res, oResData, httpCode);
+      }
+    )
   }
   return {
     update,
     deleteUser,
-    changePassword
+    changePassword,
+    getOne
   };
 };
 
