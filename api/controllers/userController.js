@@ -19,15 +19,8 @@ const UserController = () => {
     console.log('role number ========    ' + body.userRole);
 
     //Check create admin by masterkey
-    if( body.userRole == 0) {
-      if (body.masterKey != masterKey)
-        return res.status(400).json({  msg: 'You need masterkey to create admin' });
-    } else if (token) {
-      if (token.role > 0) {
+    if (token.role > 0) {
         return res.status(400).json({  msg: 'Only admin can create new user' });
-      }
-    } else {
-      return res.status(400).json({  msg: 'You need add token' });
     }
     await userManager.get(
       body,
