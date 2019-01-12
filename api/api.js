@@ -27,6 +27,7 @@ const mappedAuthRoutes = mapRoutes(config.authRoutes, 'api/controllers/');
 const mappedRechargeRoutes = mapRoutes(config.rechargeRoutes, 'api/controllers/');
 const mappedPaymentRoutes = mapRoutes(config.paymentRoutes, 'api/controllers/');
 const mappedUserRoutes = mapRoutes(config.userRoutes, 'api/controllers/');
+const mappedCustomerRoutes = mapRoutes(config.customerRoutes, 'api/controllers/');
 const DB = dbService(environment, config.migrate).start();
 
 // allow cross origin requests
@@ -48,11 +49,13 @@ app.use(bodyParser.json());
 // app.all('/private/*', (req, res, next) => auth(req, res, next));
 
 app.all('/user/*', (req, res, next) => auth(req, res, next));
+app.all('/customers/*', (req, res, next) => auth(req, res, next));
 // fill routes for express application
 app.use('/auth', mappedAuthRoutes);
 app.use('/recharge', mappedRechargeRoutes);
 app.use('/payment', mappedPaymentRoutes);
 app.use('/user', mappedUserRoutes);
+app.use('/customers', mappedCustomerRoutes);
 
 server.listen(config.port, (err) => {
   console.log('---------------   '  + config.port);

@@ -18,24 +18,31 @@ const tableName = 'customer';
 // the actual model
 const Customer = sequelize.define('customer', {
   customerId: {
-    type: Sequelize.STRING,
+    type: Sequelize.UUID,
     unique: true,
+    primaryKey: true
   },
   displayName: {
     type: Sequelize.STRING,
   },
-  totalBusiness: {
-    type: Sequelize.FLOAT,
+  email: {
+    type: Sequelize.STRING,
   },
-  numberOrder: {
-    type: Sequelize.INTEGER,
+  birthday: {
+    type: Sequelize.DATE,
+  },
+  address: {
+    type: Sequelize.STRING,
+  },
+  avatar: {
+    type: Sequelize.STRING,
+  },
+  totalSpent: {
+    type: Sequelize.STRING,
   },
   timeWorking: {
     type: Sequelize.FLOAT,
   },
-  listOrder: {
-    type: Sequelize.ARRAY(Sequelize.STRING) ,
-  }
 }, { hooks, tableName });
 
 // instead of using instanceMethod
