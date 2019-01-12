@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Customer = require('../models/Customer');
 const authService = require('../services/auth.service');
 const bcryptService = require('../services/bcrypt.service');
 

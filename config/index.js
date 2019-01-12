@@ -1,16 +1,14 @@
-const privateRoutes = require('./routes/privateRoutes');
 const authRoutes = require('./routes/authRoutes');
-const publicRoutes = require('./routes/publicRoutes');
 const rechargeRoutes = require('./routes/rechargeRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const config = {
   migrate: false,
-  privateRoutes,
   authRoutes,
-  publicRoutes,
   rechargeRoutes,
   paymentRoutes,
+  userRoutes,
   port: process.env.PORT || '8080',
 };
 
