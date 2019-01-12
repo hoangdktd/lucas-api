@@ -5,5 +5,7 @@ module.exports = {
     serverSuccess: 'success',
     serverErrorCode: 500,
     serverSuccessCode: 200,
-    token: 'X-Access-Token'
+    token: 'X-Access-Token',
+    masterKey: "phamduylaideptrai",
+    userTypeList : ['admin', 'saler', 'deliver', 'designer']
 };

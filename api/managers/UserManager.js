@@ -85,4 +85,17 @@ module.exports = {
 
     },
 
+    getAll: async (params, callback) => {
+        console.log("get all");
+        try {
+          const users = await User.findAll();
+          return callback(null,null,200, users);
+        //   return res.status(200).json({ users });
+        } catch (err) {
+          console.log(err); 
+          return callback(500, 'Internal server error', 500, null);
+        //   return res.status(500).json({ msg: 'Internal server error' });
+        }
+    }
+
 };

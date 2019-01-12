@@ -5,8 +5,8 @@ const bcryptService = require('../services/bcrypt.service');
 const oRest = require('../utils/restware');
 const oConstant = require('../utils/constant');
 
-let userTypeList = ['admin', 'saler', 'deliver', 'designer']
-let masterKey = "phamduylaideptrai"
+const masterKey = oConstant.masterKey
+const userTypeList = oConstant.userTypeList
 
 const AuthController = () => {
   const register = async (req, res) => {

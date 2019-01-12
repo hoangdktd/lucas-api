@@ -109,11 +109,25 @@ const UserController = () => {
       }
     )
   }
+
+  const getAll = async (req, res) => {
+    const { params } = req;
+    await userManager.getAll(
+      params,
+      function (errorCode, errorMessage, httpCode, users) {
+        if (errorCode) {
+            return oRest.sendError(res, errorCode, errorMessage, httpCode);
+        }
+        return oRest.sendSuccess(res, {users: users}, httpCode);
+      }
+    )
+  }
   return {
     update,
     deleteUser,
     changePassword,
-    getOne
+    getOne,
+    getAll
   };
 };
 

@@ -1,5 +1,6 @@
 const userRoutes = {
     // 'GET /': 'authController.getAll',
+    'GET /': 'userController.getAll',
     'GET /:userId': 'userController.getOne',
     'PUT /:userId': 'userController.update',
     'DELETE /:userId': 'userController.deleteUser',
