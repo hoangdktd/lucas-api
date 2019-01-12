@@ -64,11 +64,11 @@ const AuthController = () => {
         }
         if ((bcryptService().comparePassword(body.password, returnUser.password))){
           const token = authService().issue({ userId: returnUser.id, role: returnUser.userRole }); // need check jwt hoangdktd
-          let oResData = {};
-          oResData.data = {};
-          oResData.data.token = token;
-          oResData.data.user = returnUser;
-          return oRest.sendSuccess(res, oResData, httpCode);
+          // let oResData = {};
+          // oResData.data = {};
+          // oResData.data.token = token;
+          // oResData.data.user = returnUser;
+          return oRest.sendSuccess(res, {token: token, user: returnUser}, httpCode);
         }
       }
     )
