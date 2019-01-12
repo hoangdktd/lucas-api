@@ -31,7 +31,6 @@ const dbService = (environment, migrate) => {
 
   const startMigrateFalse = async () => {
     try {
-      await dropDB();
       await syncDB();
       successfulDBStart();
     } catch (err) {
