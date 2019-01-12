@@ -73,27 +73,7 @@ const AuthController = () => {
       }
     )
   }
-  const getOne = async (req, res) => {
-    const { query } = req;
-    console.log('userId ========    ' + body.userId);
-    console.log('password ========    ' + body.password);
-    await userManager.get(
-      body,
-      function (errorCode, errorMessage, httpCode, returnUser) {
-        if (errorCode) {
-            return oRest.sendError(res, errorCode, errorMessage, httpCode);
-        }
-        if ((bcryptService().comparePassword(body.password, returnUser.password))){
-          const token = authService().issue({ userId: returnUser.id, role: returnUser.userRole }); // need check jwt hoangdktd
-          let oResData = {};
-          oResData.data = {};
-          oResData.data.token = token;
-          oResData.data.user = returnUser;
-          return oRest.sendSuccess(res, oResData, httpCode);
-        }
-      }
-    )
-  }
+
   return {
     register,
     login

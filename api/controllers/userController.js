@@ -40,7 +40,6 @@ const UserController = () => {
                   return oRest.sendError(res, errorCode, errorMessage, httpCode);
               }
               let oResData = {};
-              oResData.data = {};
               oResData.user = returnUser;
               oResData.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
               return oRest.sendSuccess(res, oResData, httpCode);
@@ -70,9 +69,8 @@ const UserController = () => {
                 return oRest.sendError(res, errorCode, errorMessage, httpCode);
             }
             let oResData = {};
-            oResData.data = {};
-            oResData.data.user = returnUser;
-            oResData.data.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
+            oResData.user = returnUser;
+            oResData.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
             return oRest.sendSuccess(res, oResData, httpCode);
           }
         );
@@ -126,9 +124,8 @@ const UserController = () => {
                   return oRest.sendError(res, errorCode, errorMessage, httpCode);
               }
               let oResData = {};
-              oResData.data = {};
-              oResData.data.user = returnNewUser;
-              oResData.data.token = authService().issue({ userId: returnNewUser.userId, role: returnNewUser.userRole });
+              oResData.user = returnNewUser;
+              oResData.token = authService().issue({ userId: returnNewUser.userId, role: returnNewUser.userRole });
               return oRest.sendSuccess(res, oResData, httpCode);
             }
           );
@@ -146,9 +143,8 @@ const UserController = () => {
         }
         const token = authService().issue({ userId: returnUser.id, role: returnUser.userRole }); // need check jwt hoangdktd
         let oResData = {};
-        oResData.data = {};
-        oResData.data.token = token;
-        oResData.data.user = returnUser;
+        oResData.token = token;
+        oResData.user = returnUser;
         return oRest.sendSuccess(res, oResData, httpCode);
       }
     )
@@ -162,7 +158,7 @@ const UserController = () => {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode);
         }
-        return oRest.sendSuccess(res, {users: users}, httpCode);
+        return oRest.sendSuccess(res, {data: users, total: users.length}, httpCode);
       }
     )
   }
