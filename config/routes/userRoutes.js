@@ -1,5 +1,6 @@
 const userRoutes = {
     // 'GET /': 'authController.getAll',
+    'POST /': 'userController.createUser',
     'GET /': 'userController.getAll',
     'GET /:userId': 'userController.getOne',
     'PUT /:userId': 'userController.update',

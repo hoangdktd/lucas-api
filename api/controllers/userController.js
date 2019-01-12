@@ -8,6 +8,50 @@ const bcryptService = require('../services/bcrypt.service');
 let userTypeList = ['admin', 'saler', 'deliver', 'designer']
 
 const UserController = () => {
+
+  const createUser = async (req, res) => {
+    const { body } = req;
+    const { token } = req;
+    console.log('CREATE NEW USER');
+    console.log('userId ========    ' + body.userId);
+    console.log('displayName ========    ' + body.displayName);
+    console.log('password ========    ' + body.password);
+    console.log('role number ========    ' + body.userRole);
+
+    //Check create admin by masterkey
+    if( body.userRole == 0) {
+      if (body.masterKey != masterKey)
+        return res.status(400).json({  msg: 'You need masterkey to create admin' });
+    } else if (token) {
+      if (token.role > 0) {
+        return res.status(400).json({  msg: 'Only admin can create new user' });
+      }
+    } else {
+      return res.status(400).json({  msg: 'You need add token' });
+    }
+    await userManager.get(
+      body,
+      async function (errorCode, errorMessage, httpCode, returnUser) {
+        if (errorCode) {
+          await userManager.create(
+            body,
+            function (errorCode, errorMessage, httpCode, returnUser) {
+              if (errorCode) {
+                  return oRest.sendError(res, errorCode, errorMessage, httpCode);
+              }
+              let oResData = {};
+              oResData.data = {};
+              oResData.user = returnUser;
+              oResData.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
+              return oRest.sendSuccess(res, oResData, httpCode);
+            }
+          )
+        }
+        return res.status(400).json({  msg: 'You is already exist' });
+      }
+    );
+  };
+
   const update = async (req, res) => {
     const { body } = req;
     const { params } = req;
@@ -127,7 +171,8 @@ const UserController = () => {
     deleteUser,
     changePassword,
     getOne,
-    getAll
+    getAll,
+    createUser
   };
 };
 

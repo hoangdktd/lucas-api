@@ -41,8 +41,8 @@ const AuthController = () => {
               }
               let oResData = {};
               oResData.data = {};
-              oResData.data.user = returnUser;
-              oResData.data.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
+              oResData.user = returnUser;
+              oResData.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
               return oRest.sendSuccess(res, oResData, httpCode);
             }
           )
