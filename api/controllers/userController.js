@@ -4,8 +4,7 @@ const authService = require('../services/auth.service');
 const oRest = require('../utils/restware');
 const oConstant = require('../utils/constant');
 const bcryptService = require('../services/bcrypt.service');
-
-let userTypeList = ['admin', 'saler', 'deliver', 'designer']
+const extraFuncQuery = require('../extraFunction/createAttrForQuery');
 
 const UserController = () => {
 
@@ -17,7 +16,7 @@ const UserController = () => {
     console.log('displayName ========    ' + body.displayName);
     console.log('password ========    ' + body.password);
     console.log('role number ========    ' + body.userRole);
-
+    console.log(token);
     //Check create admin by masterkey
     if (token.role > 0) {
         return res.status(400).json({  msg: 'Only admin can create new user' });
@@ -145,8 +144,10 @@ const UserController = () => {
 
   const getAll = async (req, res) => {
     const { params } = req;
+    const {query} = req;
+    attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInUserColumn, oConstant.searchFieldInUserColumn);
     await userManager.getAll(
-      params,
+      attr,
       function (errorCode, errorMessage, httpCode, users) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode);
