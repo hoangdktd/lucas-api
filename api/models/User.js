@@ -48,7 +48,10 @@ const User = sequelize.define('User', {
       // },
       validPassword(password) {
           return bcryptSevice.compare(password, this.password);
-      }
+      },
+    defaultScope: {
+      attributes: { exclude: ['password'] },
+    }
   }
  });
 

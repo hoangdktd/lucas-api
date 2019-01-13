@@ -18,7 +18,7 @@ const tableName = 'customer';
 // the actual model
 const Customer = sequelize.define('customer', {
   customerId: {
-    type: Sequelize.UUID,
+    type: Sequelize.STRING,
     unique: true,
     primaryKey: true
   },

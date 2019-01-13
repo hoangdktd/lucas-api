@@ -7,5 +7,12 @@ module.exports = {
     serverSuccessCode: 200,
     token: 'X-Access-Token',
     masterKey: "phamduylaideptrai",
-    userTypeList : ['admin', 'saler', 'deliver', 'designer']
+    userTypeList : ['admin', 'saler', 'deliver', 'designer'],
+    limitGetData: 'perPage',
+    offsetGetData: 'page',
+    keywordSearchText: 'q',
+    searchFieldInUserColumn: ['userId', 'displayName'],
+    filterFieldInUserColumn: ['userType', 'userRole'],
+    searchFieldInCustomerColumn: ['customerId', 'displayName', 'email'],
+    filterFieldInCustomerColumn: ['email']
 };

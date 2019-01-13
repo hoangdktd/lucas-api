@@ -48,8 +48,8 @@ app.use(bodyParser.json());
 // secure your private routes with jwt authentication middleware
 // app.all('/private/*', (req, res, next) => auth(req, res, next));
 
-app.all('/user/*', (req, res, next) => auth(req, res, next));
-app.all('/customers/*', (req, res, next) => auth(req, res, next));
+app.all('/user*', (req, res, next) => auth(req, res, next));
+app.all('/customers*', (req, res, next) => auth(req, res, next));
 // fill routes for express application
 app.use('/auth', mappedAuthRoutes);
 app.use('/recharge', mappedRechargeRoutes);

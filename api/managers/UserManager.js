@@ -2,8 +2,9 @@ const User = require('../models/User');
 const Customer = require('../models/Customer');
 const authService = require('../services/auth.service');
 const bcryptService = require('../services/bcrypt.service');
+const oConstant = require('../utils/constant');
 
-let userTypeList = ['admin', 'saler', 'deliver', 'designer']
+const userTypeList = oConstant.userTypeList
 
 module.exports = {
     get: async (param, callback) => {
@@ -86,9 +87,8 @@ module.exports = {
     },
 
     getAll: async (params, callback) => {
-        console.log("get all");
         try {
-          const users = await User.findAll();
+          const users = await User.findAll(params);
           return callback(null,null,200, users);
         //   return res.status(200).json({ users });
         } catch (err) {
