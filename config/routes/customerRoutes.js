@@ -1,8 +1,9 @@
 const customerRoutes = {
     'POST /': 'customerController.createCustomer',
     'GET /': 'customerController.getAll',
-    'GET /:customerId': 'customerController.getOne',
-    'DELETE /:customerId': 'customerController.deleteCustomer'
+    'PUT /:id': 'customerController.updateCustomer',
+    'GET /:id': 'customerController.getOne',
+    'DELETE /:id': 'customerController.deleteCustomer'
 };
 
 module.exports = customerRoutes;

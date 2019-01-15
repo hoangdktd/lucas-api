@@ -17,11 +17,12 @@ const tableName = 'customer';
 
 // the actual model
 const Customer = sequelize.define('customer', {
-  customerId: {
-    type: Sequelize.STRING,
-    unique: true,
-    primaryKey: true
-  },
+  // customerId: {
+  //   type: Sequelize.INTEGER,
+  //   autoIncrement: true,
+  //   unique: true,
+  //   primaryKey: true
+  // },
   displayName: {
     type: Sequelize.STRING,
   },
@@ -33,6 +34,9 @@ const Customer = sequelize.define('customer', {
   },
   address: {
     type: Sequelize.STRING,
+  },
+  isDelete: {
+    type: Sequelize.BOOLEAN,
   },
   avatar: {
     type: Sequelize.STRING,
