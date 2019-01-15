@@ -12,7 +12,7 @@ module.exports = {
             return  Customer.create({
                 // customerId: uuidv1(),
                 displayName: customerData.displayName ? customerData.displayName : '',
-                customerId: customerData.customerId,
+                customerIdentity: customerData.customerIdentity,
                 email: customerData.email,
                 birthday: customerData.birthday,
                 address: customerData.address ? customerData.address : '',
@@ -26,25 +26,6 @@ module.exports = {
     },
     update: async(params, callback) => {
         try {
-            // const customer = await Customer.findOne({
-            //     where: {
-            //         id: params.id,
-            //     },
-            // });
-
-            // if(!customer) {
-            //     return callback(400, 'Bad Request: User not found', 400, null, null);
-            // }
-            // await customer.update({
-            //     email : params.email,
-            //     displayName : params.displayName,
-            //     birthday :  params.birthday,
-            //     address : params.address,
-            // });
-            // return callback(null,null,200, customer);
-
-
-
             const resultCustomer = await Customer.findOne({
                 where: {
                     id: params.id,
@@ -53,7 +34,7 @@ module.exports = {
             }).then( customer => {
                 customer.updateAttributes({
                     email : params.email,
-                    customerId: params.customerId,
+                    customerIdentity: params.customerIdentity,
                     displayName : params.displayName,
                     birthday :  params.birthday,
                     address : params.address,
@@ -69,12 +50,7 @@ module.exports = {
     },
     getOne: async (queryContent, callback) =>{
         try {
-            const customer = await Customer.findOne({
-                where: {
-                    id: queryContent.id,
-                    isDelete: false
-                },
-            });
+            const customer = await Customer.findById(queryContent.id);
 
             if(!customer) {
                 return callback(400, 'Bad Request: User not found', 400, null, null);

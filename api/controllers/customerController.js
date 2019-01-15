@@ -21,7 +21,7 @@ const customerController = () => {
           email: body.email,
           birthday: body.birthday,
           address: body.address,
-          customerId: body.customerId
+          customerIdentity: body.customerIdentity
         },
         function (errorCode, errorMessage, httpCode, returnCustomerModel) {
             if (errorCode) {
@@ -29,7 +29,8 @@ const customerController = () => {
             }
             var oResData = {};
             oResData.displayName = returnCustomerModel.displayName;
-            oResData.customerId = returnCustomerModel.customerId;
+            oResData.customerIdentity = returnCustomerModel.customerIdentity;
+            oResData.id = returnCustomerModel.id;
             return oRest.sendSuccess(res, oResData, httpCode);
         }
     );
@@ -49,7 +50,7 @@ const customerController = () => {
           email: body.email,
           birthday: body.birthday,
           address: body.address,
-          customerId: body.customerId
+          customerIdentity: body.customerIdentity
         },
         function (errorCode, errorMessage, httpCode, returnCustomerModel) {
             if (errorCode) {
@@ -57,7 +58,8 @@ const customerController = () => {
             }
             var oResData = {};
             oResData.displayName = returnCustomerModel.displayName;
-            oResData.customerId = returnCustomerModel.customerId;
+            oResData.customerIdentity = returnCustomerModel.customerIdentity;
+            oResData.id = returnCustomerModel.id;
             return oRest.sendSuccess(res, oResData, httpCode);
         }
     );
