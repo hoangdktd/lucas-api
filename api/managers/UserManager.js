@@ -49,7 +49,8 @@ module.exports = {
                 displayName: params.displayName,
                 password : params.password,
                 userRole: params.userRole,
-                userType : userTypeList[params.userRole]
+                userType : userTypeList[params.userRole],
+                isDeleted : false
             });
 
             if(!user) {
@@ -85,15 +86,18 @@ module.exports = {
 
     delete: async(param, callback) => {
         try {
-            rowdeleted =  await User.destroy({
-                where: {
-                id: param.id //this will be your id that you want to delete
-                }
-            });
-            if (rowdeleted > 0){
-                return callback(null,'Delete Success',200, null);
+            user =  await User.findById(param.id);
+            if (!user){
+                return callback(null,'User not found',400, null);
             } else {
-                return callback(400, 'User not found', 400, null);
+                userUpdate = await params.user.update({
+                    isDeleted: true
+                });
+                if (!userUpdate) {
+                    return callback(null,'Server error',400, null);
+                } else {
+                    return callback(null,'Server error',200, userUpdate);
+                }
             }
         } catch (err) {
             // better save it to log file

@@ -38,6 +38,9 @@ const User = sequelize.define('User', {
   email: {
     type: Sequelize.STRING,
   },
+  isDelete: {
+    type: Sequelize.BOOLEAN,
+  }
 }, {
     hooks,
     tableName,
