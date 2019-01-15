@@ -17,12 +17,10 @@ const tableName = 'customer';
 
 // the actual model
 const Customer = sequelize.define('customer', {
-  // customerId: {
-  //   type: Sequelize.INTEGER,
-  //   autoIncrement: true,
-  //   unique: true,
-  //   primaryKey: true
-  // },
+  customerId: {
+    type: Sequelize.STRING,
+    unique: true,
+  },
   displayName: {
     type: Sequelize.STRING,
   },

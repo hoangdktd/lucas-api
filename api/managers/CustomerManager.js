@@ -12,6 +12,7 @@ module.exports = {
             return  Customer.create({
                 // customerId: uuidv1(),
                 displayName: customerData.displayName ? customerData.displayName : '',
+                customerId: customerData.customerId,
                 email: customerData.email,
                 birthday: customerData.birthday,
                 address: customerData.address ? customerData.address : '',
@@ -52,6 +53,7 @@ module.exports = {
             }).then( customer => {
                 customer.updateAttributes({
                     email : params.email,
+                    customerId: params.customerId,
                     displayName : params.displayName,
                     birthday :  params.birthday,
                     address : params.address,
@@ -85,12 +87,7 @@ module.exports = {
     },
     getAll: function( queryContent, callback){
         try {
-            const customers = Customer.findAll({
-                where: {
-                    isDelete: false
-                },
-                attributes: ['displayName', 'id', ['id', 'key'], 'email', 'birthday', 'address', 'totalSpent']
-            }).then(listCustomer => {
+            const customers = Customer.findAll(queryContent).then(listCustomer => {
                 return callback(null,null,200, null, listCustomer);
             });
         }catch(error){

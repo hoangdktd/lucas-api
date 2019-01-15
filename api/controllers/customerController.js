@@ -3,6 +3,7 @@ const customerManager = require('../managers/CustomerManager');
 const authService = require('../services/auth.service');
 const oRest = require('../utils/restware');
 const oConstant = require('../utils/constant');
+const extraFuncQuery = require('../extraFunction/createAttrForQuery');
 
 const customerController = () => {
   const createCustomer = async (req, res) => {
@@ -19,7 +20,8 @@ const customerController = () => {
           displayName: body.displayName,
           email: body.email,
           birthday: body.birthday,
-          address: body.address
+          address: body.address,
+          customerId: body.customerId
         },
         function (errorCode, errorMessage, httpCode, returnCustomerModel) {
             if (errorCode) {
@@ -27,7 +29,7 @@ const customerController = () => {
             }
             var oResData = {};
             oResData.displayName = returnCustomerModel.displayName;
-            oResData.id = returnCustomerModel.id;
+            oResData.customerId = returnCustomerModel.customerId;
             return oRest.sendSuccess(res, oResData, httpCode);
         }
     );
@@ -46,7 +48,8 @@ const customerController = () => {
           displayName: body.displayName,
           email: body.email,
           birthday: body.birthday,
-          address: body.address
+          address: body.address,
+          customerId: body.customerId
         },
         function (errorCode, errorMessage, httpCode, returnCustomerModel) {
             if (errorCode) {
@@ -61,14 +64,14 @@ const customerController = () => {
   };
   const getOne = async (req, res) => {
     console.log('get one');
-    const customerId = req.params.id || req.query.id || '';
+    const id = req.params.id || req.query.id || '';
     // const role = req.body.token.role;
     const role = 0;
     if (role !== 0) {
       return oRest.sendError(res, 41716, 'invalid right', 403, 'you have no right to access these information');
     }
     const queryContent = {
-      id: customerId
+      id: id
     }
     await customerManager.getOne( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, results) {
         if (errorCode) {
@@ -81,15 +84,10 @@ const customerController = () => {
     });
   };
   const getAll = async (req, res) => {
-    const accessUserId = req.query.accessUserId || '';
-    const accessUserRight = req.query.accessUserRight || '';
-    const queryContent = req.query || '';
-    // const role = req.body.token.role;
-    const role = 0;
-    if (role !== 0) {
-      return oRest.sendError(res, 41716, 'invalid right', 403, 'you have no right to access these information');
-    }
-    await customerManager.getAll( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, results) {
+    const { params } = req;
+    const {query} = req;
+    const attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInCustomerColumn, oConstant.searchFieldInCustomerColumn);
+    await customerManager.getAll( attr, function (errorCode, errorMessage, httpCode, errorDescription, results) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
         }
@@ -107,12 +105,10 @@ const customerController = () => {
     if (role !== 0) {
       return oRest.sendError(res, 41716, 'invalid right', 403, 'you have no right to access these information');
     }
-    const customerId = req.params.id || req.query.id || '';
-    console.log('======================================');
-    console.log(customerId);
+    const id = req.params.id || req.query.id || '';
     await customerManager.delete(
         {
-          id: customerId
+          id: id
         },
         function (errorCode, errorMessage, httpCode, returnCustomerModel) {
             if (errorCode) {

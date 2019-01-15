@@ -13,6 +13,6 @@ module.exports = {
     keywordSearchText: 'q',
     searchFieldInUserColumn: ['userId', 'displayName'],
     filterFieldInUserColumn: ['userType', 'userRole'],
-    searchFieldInCustomerColumn: ['customerId', 'displayName', 'email'],
-    filterFieldInCustomerColumn: ['email']
+    searchFieldInCustomerColumn: ['displayName', 'email', 'address'],
+    filterFieldInCustomerColumn: ['displayName', 'email', 'address']
 };
