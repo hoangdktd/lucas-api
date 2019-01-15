@@ -21,7 +21,7 @@ const UserController = () => {
     if (token.role > 0) {
         return res.status(400).json({  msg: 'Only admin can create new user' });
     }
-    await userManager.get(
+    await userManager.getUserId(
       body,
       async function (errorCode, errorMessage, httpCode, returnUser) {
         if (errorCode) {

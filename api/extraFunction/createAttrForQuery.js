@@ -20,6 +20,7 @@ const filterAndSearch = (query, filterList, searchList) =>{
         attr.where[filterList[i]] = query[filterList[i]];
       }
     };
+    attr.where.isDelete = false
     return attr
 }
 

@@ -2,10 +2,10 @@ const userRoutes = {
     // 'GET /': 'authController.getAll',
     'POST /': 'userController.createUser',
     'GET /': 'userController.getAll',
-    'GET /:userId': 'userController.getOne',
-    'PUT /:userId': 'userController.update',
-    'DELETE /:userId': 'userController.deleteUser',
-    'PUT /change-password/:userId': 'userController.changePassword',
+    'GET /:id': 'userController.getOne',
+    'PUT /:id': 'userController.update',
+    'DELETE /:id': 'userController.deleteUser',
+    'PUT /change-password/:id': 'userController.changePassword',
 };
 
 module.exports = userRoutes;

@@ -56,7 +56,7 @@ const AuthController = () => {
     const { body } = req;
     console.log('userId ========    ' + body.userId);
     console.log('password ========    ' + body.password);
-    await userManager.get(
+    await userManager.getUserId(
       body,
       function (errorCode, errorMessage, httpCode, returnUser) {
         if (errorCode) {

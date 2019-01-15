@@ -18,14 +18,13 @@ const tableName = 'user';
 
 // the actual model
 const User = sequelize.define('User', {
+  userId: {
+    type: Sequelize.STRING,
+    unique: true,
+  },
   password: {
     type: Sequelize.STRING,
     required: true
-  },
-  userId: {
-    type: Sequelize.STRING,
-    primaryKey: true,
-    unique: true,
   },
   displayName: {
     type: Sequelize.STRING,
