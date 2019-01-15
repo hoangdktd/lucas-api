@@ -17,7 +17,7 @@ const tableName = 'customer';
 
 // the actual model
 const Customer = sequelize.define('customer', {
-  customerId: {
+  customerIdentity: {
     type: Sequelize.STRING,
     unique: true,
   },
