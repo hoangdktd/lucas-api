@@ -32,7 +32,7 @@ const UserController = () => {
                   return oRest.sendError(res, errorCode, errorMessage, httpCode);
               }
               let oResData = {};
-              oResData.user = returnUser;
+              oResData = returnUser;
               oResData.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
               return oRest.sendSuccess(res, oResData, httpCode);
             }

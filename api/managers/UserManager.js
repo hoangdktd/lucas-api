@@ -50,7 +50,7 @@ module.exports = {
                 password : params.password,
                 userRole: params.userRole,
                 userType : userTypeList[params.userRole],
-                isDeleted : false
+                isDelete : false
             });
 
             if(!user) {
