@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
-
+const Customer = require('../models/Customer');
+const User = require('../models/User');
 // for encrypting our passwords
 const bcryptSevice = require('../services/bcrypt.service');
 
@@ -21,27 +22,71 @@ const Order = sequelize.define('order', {
     type: Sequelize.STRING,
     unique: true,
   },
-  productId: {
+  status: {
+    type: Sequelize.ENUM,   //new, done, pending
+    values: ['new', 'pending', 'done']
+  },
+  customerId: {
+    type: Sequelize.INTEGER,
+    reference: {
+      model: Customer,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  saleId: {
+    type: Sequelize.INTEGER,
+    reference: {
+      model: User,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  channel: {
     type: Sequelize.STRING,
   },
-  productName: {
-    type: Sequelize.STRING,
-  },
-  eCoinF: {
-    type: Sequelize.FLOAT,
-  },
-  ownerId: {
-    type: Sequelize.STRING,
-  },
-  buyerId: {
-    type: Sequelize.STRING,
-  },
-  orderDate: {
+  createDate: {
     type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW
   },
-  orderStatus: {
-    type: Sequelize.STRING,
+  finishedDate: {
+    type: Sequelize.DATE
+  },
+  priceOrder: {
+    type: Sequelize.FLOAT
+  },
+  note: {
+    type: Sequelize.STRING
+  },
+  infoOrderLink: {
+    type: Sequelize.STRING
+  },
+  backupOrderLink: {
+    type: Sequelize.STRING
+  },
+  paymentStatus: {
+    type: Sequelize.ENUM,
+    values: ['TT', 'CTT']
+  },
+  designerId: {
+    type: Sequelize.INTEGER,
+    reference: {
+      model: User,
+      key: 'id',
+      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
+    }
+  },
+  typeDesigner: {
+    type: Sequelize.ENUM,
+    values: ['online', 'offline']
+  },
+  idPackage: {
+    type: Sequelize.STRING
+  },
+  numberPackage: {
+    type: Sequelize.INTEGER
   }
+
 }, { hooks, tableName });
 
 // instead of using instanceMethod
