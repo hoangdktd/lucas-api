@@ -90,7 +90,7 @@ module.exports = {
             if (!user){
                 return callback(null,'User not found',400, null);
             } else {
-                userUpdate = await params.user.update({
+                userUpdate = await user.update({
                     isDeleted: true
                 });
                 if (!userUpdate) {

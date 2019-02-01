@@ -81,8 +81,11 @@ const UserController = () => {
     if (token.role > 0) {
       return res.status(400).json({  msg: 'Only admin can delete new user' });
     }
+    const id = req.params.id || req.query.id || '';
     await userManager.delete(
-      params,
+      {
+        id: id
+      },
       function (errorCode, errorMessage, httpCode, returnData) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode);
@@ -137,7 +140,7 @@ const UserController = () => {
         let oResData = {};
         oResData.token = token;
         oResData.user = returnUser;
-        return oRest.sendSuccess(res, oResData, httpCode);
+        return oRest.sendSuccess(res, returnUser, httpCode);
       }
     )
   }
