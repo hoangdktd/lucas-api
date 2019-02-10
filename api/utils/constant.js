@@ -14,5 +14,8 @@ module.exports = {
     searchFieldInUserColumn: ['userId', 'displayName'],
     filterFieldInUserColumn: ['userType', 'userRole'],
     searchFieldInCustomerColumn: ['displayName', 'email', 'address'],
-    filterFieldInCustomerColumn: ['displayName', 'email', 'address']
+    filterFieldInCustomerColumn: ['displayName', 'email', 'address'],
+    searchFieldInCategoryColumn: ['name'],
+    filterFieldInCategoryColumn: ['name'],
+    orderStatus: ['ordered', 'delivered', 'cancelled']
 };

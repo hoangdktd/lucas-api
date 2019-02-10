@@ -28,6 +28,7 @@ const mappedRechargeRoutes = mapRoutes(config.rechargeRoutes, 'api/controllers/'
 const mappedPaymentRoutes = mapRoutes(config.paymentRoutes, 'api/controllers/');
 const mappedUserRoutes = mapRoutes(config.userRoutes, 'api/controllers/');
 const mappedCustomerRoutes = mapRoutes(config.customerRoutes, 'api/controllers/');
+const mappedCategoryRoutes = mapRoutes(config.categoryRoutes, 'api/controllers/');
 const DB = dbService(environment, config.migrate).start();
 
 // allow cross origin requests
@@ -56,6 +57,7 @@ app.use('/recharge', mappedRechargeRoutes);
 app.use('/payment', mappedPaymentRoutes);
 app.use('/user', mappedUserRoutes);
 app.use('/customers', mappedCustomerRoutes);
+app.use('/categories', mappedCategoryRoutes);
 
 server.listen(config.port, (err) => {
   console.log('---------------   '  + config.port);
