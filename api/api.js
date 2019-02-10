@@ -29,6 +29,7 @@ const mappedPaymentRoutes = mapRoutes(config.paymentRoutes, 'api/controllers/');
 const mappedUserRoutes = mapRoutes(config.userRoutes, 'api/controllers/');
 const mappedCustomerRoutes = mapRoutes(config.customerRoutes, 'api/controllers/');
 const mappedCategoryRoutes = mapRoutes(config.categoryRoutes, 'api/controllers/');
+const mappedProductRoutes = mapRoutes(config.productRoutes, 'api/controllers/');
 const DB = dbService(environment, config.migrate).start();
 
 // allow cross origin requests
@@ -58,6 +59,7 @@ app.use('/payment', mappedPaymentRoutes);
 app.use('/user', mappedUserRoutes);
 app.use('/customers', mappedCustomerRoutes);
 app.use('/categories', mappedCategoryRoutes);
+app.use('/products', mappedProductRoutes);
 
 server.listen(config.port, (err) => {
   console.log('---------------   '  + config.port);
