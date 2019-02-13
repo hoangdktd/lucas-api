@@ -21,7 +21,10 @@ const customerController = () => {
           email: body.email,
           birthday: body.birthday,
           address: body.address,
-          customerIdentity: body.customerIdentity
+          customerIdentity: body.customerIdentity,
+          facebookLink: body.facebookLink,
+          note: body.note,
+          channel: body.channel
         },
         function (errorCode, errorMessage, httpCode, returnCustomerModel) {
             if (errorCode) {
@@ -50,7 +53,10 @@ const customerController = () => {
           email: body.email,
           birthday: body.birthday,
           address: body.address,
-          customerIdentity: body.customerIdentity
+          customerIdentity: body.customerIdentity,
+          facebookLink: body.facebookLink,
+          note: body.note,
+          channel: body.channel
         },
         function (errorCode, errorMessage, httpCode, returnCustomerModel) {
             if (errorCode) {

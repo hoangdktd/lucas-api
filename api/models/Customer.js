@@ -45,6 +45,16 @@ const Customer = sequelize.define('customer', {
   timeWorking: {
     type: Sequelize.FLOAT,
   },
+  facebookLink: {
+    type: Sequelize.STRING,
+  },
+  note: {
+    type: Sequelize.STRING,
+  },
+  channel: {
+    type: Sequelize.STRING
+  }
+
 }, { hooks, tableName });
 
 // instead of using instanceMethod
