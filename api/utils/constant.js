@@ -17,5 +17,9 @@ module.exports = {
     filterFieldInCustomerColumn: ['displayName', 'email', 'address'],
     searchFieldInCategoryColumn: ['name'],
     filterFieldInCategoryColumn: ['name'],
+    searchFieldInProductColumn: ['name'],
+    filterFieldInProductColumn: ['name'],
+    searchFieldInCommandsColumn: ['name'],
+    filterFieldInCommandsColumn: ['name'],
     orderStatus: ['ordered', 'delivered', 'cancelled']
 };

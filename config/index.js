@@ -5,6 +5,7 @@ const userRoutes = require('./routes/userRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
+const commandsRoutes = require('./routes/commandsRoutes');
 
 const config = {
   migrate: false,
@@ -15,7 +16,8 @@ const config = {
   customerRoutes,
   port: process.env.PORT || '8080',
   categoryRoutes,
-  productRoutes
+  productRoutes,
+  commandsRoutes
 };
 
 module.exports = config;
