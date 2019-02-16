@@ -1,6 +1,9 @@
 
 module.exports = {
     statusEnum: ['ACTIVATED', 'DEACTIVATED', 'DELETED', 'WAITING_APPROVE', 'NONE'],
+    orderStatusEnum: ['new', 'pending', 'done'],
+    paymentStatusEnum: ['TT', 'CTT'],
+    typeDesignerEnum:  ['online', 'offline'],
     serverError: 'Internal server error',
     serverSuccess: 'success',
     serverErrorCode: 500,
@@ -26,5 +29,7 @@ module.exports = {
     filterFieldInProductColumn: ['name'],
     searchFieldInCommandsColumn: ['name'],
     filterFieldInCommandsColumn: ['name'],
+    searchFieldInOrderColumn: ['name'],
+    filterFieldInOrderColumn: ['name'],
     orderStatus: ['ordered', 'delivered', 'cancelled']
 };

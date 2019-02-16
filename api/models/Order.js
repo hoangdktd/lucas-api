@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const Customer = require('../models/Customer');
 const User = require('../models/User');
+const oConstant = require('../utils/constant');
 // for encrypting our passwords
 const bcryptSevice = require('../services/bcrypt.service');
 
@@ -18,15 +19,15 @@ const tableName = 'order';
 
 // the actual model
 const Order = sequelize.define('order', {
-  orderId: {
-    type: Sequelize.STRING,
-    unique: true,
-  },
+  // orderId: {
+  //   type: Sequelize.STRING,
+  //   unique: true,
+  // },
   status: {
-    type: Sequelize.ENUM,   //new, done, pending
-    values: ['new', 'pending', 'done']
+    type: Sequelize.ENUM,   //'ordered', 'delivered', 'cancelled'
+    values: oConstant.orderStatusEnum
   },
-  customerId: {
+  customerIdentity: {
     type: Sequelize.INTEGER,
     reference: {
       model: Customer,
@@ -66,7 +67,7 @@ const Order = sequelize.define('order', {
   },
   paymentStatus: {
     type: Sequelize.ENUM,
-    values: ['TT', 'CTT']
+    values: oConstant.paymentStatusEnum
   },
   designerId: {
     type: Sequelize.INTEGER,
@@ -78,15 +79,17 @@ const Order = sequelize.define('order', {
   },
   typeDesigner: {
     type: Sequelize.ENUM,
-    values: ['online', 'offline']
+    values: oConstant.typeDesignerEnum
   },
   idPackage: {
     type: Sequelize.STRING
   },
   numberPackage: {
     type: Sequelize.INTEGER
-  }
-
+  },
+  isDelete: {
+    type: Sequelize.BOOLEAN,
+  },
 }, { hooks, tableName });
 
 // instead of using instanceMethod
