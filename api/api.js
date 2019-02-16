@@ -53,6 +53,9 @@ app.use(bodyParser.json());
 
 app.all('/user*', (req, res, next) => auth(req, res, next));
 app.all('/customers*', (req, res, next) => auth(req, res, next));
+app.all('/categories*', (req, res, next) => auth(req, res, next));
+app.all('/products*', (req, res, next) => auth(req, res, next));
+app.all('/commands*', (req, res, next) => auth(req, res, next));
 // fill routes for express application
 app.use('/auth', mappedAuthRoutes);
 app.use('/recharge', mappedRechargeRoutes);

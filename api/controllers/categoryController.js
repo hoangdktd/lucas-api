@@ -9,9 +9,8 @@ const categoryController = () => {
   const createCategory = async (req, res) => {
     // body is part of a form-data
     const { body } = req;
-    // const role = body.token.role;
-    const role = 0;
-    if (role !== 0) {
+    const role = req.token.role;
+    if (role > oConstant.userRoleUser) {
       return oRest.sendError(res, 41716, 'invalid right', 403, 'you have no right to access these information');
     }
     console.log(body.address);
@@ -33,9 +32,8 @@ const categoryController = () => {
   const updateCategory = async (req, res) => {
     // body is part of a form-data
     const { body } = req;
-    // const role = body.token.role;
-    const role = 0;
-    if (role !== 0) {
+    const role = req.token.role;
+    if (role > oConstant.userRoleUser) {
       return oRest.sendError(res, 41716, 'invalid right', 403, 'you have no right to access these information');
     }
     await categoryManager.update(
@@ -56,8 +54,8 @@ const categoryController = () => {
   };
   const getOne = async (req, res) => {
     const id = req.params.id || req.query.id || '';
-    const role = 0;
-    if (role !== 0) {
+    const role = req.token.role;
+    if (role > oConstant.userRoleUser) {
       return oRest.sendError(res, 41716, 'invalid right', 403, 'you have no right to access these information');
     }
     const queryContent = {
@@ -87,9 +85,8 @@ const categoryController = () => {
   const deleteCategory = async (req, res) => {
     // body is part of a form-data
     const { body } = req;
-    // const role = body.token.role;
-    const role = 0;
-    if (role !== 0) {
+    const role = req.token.role;
+    if (role > oConstant.userRoleUser) {
       return oRest.sendError(res, 41716, 'invalid right', 403, 'you have no right to access these information');
     }
     const id = req.params.id || req.query.id || '';

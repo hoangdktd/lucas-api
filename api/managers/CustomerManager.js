@@ -35,15 +35,15 @@ module.exports = {
                     isDelete: false
                 },
             }).then( customer => {
-                customer.updateAttributes({
+                return customer.updateAttributes({
                     email : params.email,
                     customerIdentity: params.customerIdentity,
                     displayName : params.displayName,
                     birthday :  params.birthday,
                     address : params.address,
-                    facebookLink: customerData.facebookLink,
-                    note: customerData.note,
-                    channel: customerData.channel,
+                    facebookLink: params.facebookLink,
+                    note: params.note,
+                    channel: params.channel,
                 }).then( customer => {
                     return callback(null,null,200, customer);
                 });
