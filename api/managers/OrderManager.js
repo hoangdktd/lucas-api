@@ -173,7 +173,7 @@ module.exports = {
     },
     getAll: function( queryContent, callback){
         try {
-            const orders = Order.findAll(queryContent).then(listOrder => {
+            const orders = Order.findAndCountAll(queryContent).then(listOrder => {
                 return callback(null,null,200, null, listOrder);
             });
         }catch(error){

@@ -155,7 +155,9 @@ const UserController = () => {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode);
         }
-        return oRest.sendSuccess(res, {data: users, total: users.length}, httpCode);
+        return oRest.sendSuccess(res, {
+          data: users.rows, total: users.count
+        }, httpCode);
       }
     )
   }

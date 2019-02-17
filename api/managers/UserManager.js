@@ -108,7 +108,7 @@ module.exports = {
 
     getAll: async (params, callback) => {
         try {
-          const users = await User.findAll(params);
+          const users = await User.findAndCountAll(params);
           return callback(null,null,200, users);
         //   return res.status(200).json({ users });
         } catch (err) {
