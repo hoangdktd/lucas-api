@@ -52,52 +52,9 @@ module.exports = {
                             return callback(400, 'fail transaction', 400, null);
                         });
                     } else {
-                        return callback(462,'already has package id', 400, null);
+                        return callback(462,'Package ID is duplicated. Please try again.', 400, null);
                     }
                 });
-
-
-
-
-                // return Order.Profile.count({ where: { idPackage: orderData.idPackage, isDelete: false } })
-                // .then(count => {
-                //     console.log('count');
-                //     console.log(count);
-                //     if (count != 0) {
-                //         return callback(462,'already has package id', 400, null);
-                //     }
-                //     return Order.sequelize.transaction(function (t) {
-                //         console.log('start transaction');
-                //         const orderPromises = [];
-                //         for (let i = 0; i < orderData.numberPackage; i++) {
-                //             const newPromise = Order.create({
-                //                 status: orderData.status,
-                //                 customerIdentity: orderData.customerIdentity,
-                //                 saleId: orderData.saleId,
-                //                 channel: orderData.channel,
-                //                 createDate: orderData.createDate,
-                //                 finishedDate: orderData.finishedDate,
-                //                 priceOrder: orderData.priceOrder,
-                //                 note: orderData.note,
-                //                 infoOrderLink: orderData.infoOrderLink,
-                //                 backupOrderLink: orderData.backupOrderLink,
-                //                 paymentStatus: orderData.paymentStatus,
-                //                 designerId: orderData.designerId,
-                //                 typeDesigner: orderData.typeDesigner,
-                //                 idPackage: orderData.idPackage,
-                //                 numberPackage: orderData.numberPackage,
-                //                 packageOrder: i,
-                //                 isDelete: false
-                //             }, {transaction: t});
-                //             orderPromises.push(newPromise);
-                //         }
-                //         return Promise.all(orderPromises);
-                //     }).then(function (result) {
-                //         return callback(null,null,200, result);
-                //     }).catch(function (err) {
-                //         return callback(400, 'fail transaction', 400, null);
-                //     });
-                // });
             } else {
                 return  Order.create({
                     status: orderData.status,

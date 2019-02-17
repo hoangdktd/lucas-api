@@ -5,7 +5,7 @@ const bcryptSevice = require('../services/bcrypt.service')
 
 // the DB connection
 const sequelize = require('../../config/database');
-
+const oConstant = require('../utils/constant');
 // hooks are functions that can run before or after a specific event
 const hooks = {
   beforeCreate(user) {
