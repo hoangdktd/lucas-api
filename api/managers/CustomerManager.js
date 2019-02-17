@@ -69,7 +69,7 @@ module.exports = {
     },
     getAll: function( queryContent, callback){
         try {
-            const customers = Customer.findAll(queryContent).then(listCustomer => {
+            const customers = Customer.findAndCountAll(queryContent).then(listCustomer => {
                 return callback(null,null,200, null, listCustomer);
             });
         }catch(error){

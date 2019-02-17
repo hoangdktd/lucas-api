@@ -96,8 +96,8 @@ const customerController = () => {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
         }
         return oRest.sendSuccess(res, {
-          data: results,
-          total: results.length
+          data: results.rows,
+          total: results.count
         }, httpCode);
     });
   };
