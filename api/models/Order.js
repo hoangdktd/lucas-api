@@ -87,6 +87,9 @@ const Order = sequelize.define('order', {
   numberPackage: {
     type: Sequelize.INTEGER
   },
+  packageOrder: {
+    type: Sequelize.INTEGER
+  },
   isDelete: {
     type: Sequelize.BOOLEAN,
   },

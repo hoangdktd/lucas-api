@@ -13,9 +13,9 @@ const orderController = () => {
     if (role > oConstant.userRoleUser) {
       return oRest.sendError(res, 41716, 'invalid right', 403, 'you have no right to access these information');
     }
-    console.log(body.address);
     await orderManager.create(
         {
+            status: body.status,
             customerIdentity: body.customerIdentity,
             saleId: body.saleId,
             channel: body.channel,
@@ -50,6 +50,7 @@ const orderController = () => {
     }
     await orderManager.update(
         {
+            status: body.status,
             customerIdentity: body.customerIdentity,
             saleId: body.saleId,
             channel: body.channel,

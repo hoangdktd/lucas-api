@@ -9,26 +9,117 @@ const oConstant = require('../utils/constant');
 module.exports = {
     create: async (orderData, callback) => {
         try {
-            return  Order.create({
-                status: oConstant.orderStatusEnum[0],
-                customerIdentity: orderData.customerIdentity,
-                saleId: orderData.saleId,
-                channel: orderData.channel,
-                createDate: orderData.createDate,
-                finishedDate: orderData.finishedDate,
-                priceOrder: orderData.priceOrder,
-                note: orderData.note,
-                infoOrderLink: orderData.infoOrderLink,
-                backupOrderLink: orderData.backupOrderLink,
-                paymentStatus: orderData.paymentStatus,
-                designerId: orderData.designerId,
-                typeDesigner: orderData.typeDesigner,
-                idPackage: orderData.idPackage,
-                numberPackage: orderData.numberPackage,
-                isDelete: false
-            }).then( (order) => {
-                return callback(null,null,200, order);
-            });
+            if (orderData.idPackage && orderData.numberPackage > 0) {
+                console.log('isPackageIdUnique');
+                console.log(orderData.idPackage);
+
+                const resultOrder = await Order.findOne({
+                    where: {
+                        idPackage: orderData.idPackage,
+                        isDelete: false
+                    },
+                }).then( order => {
+                    if(!order) {
+                        return Order.sequelize.transaction(function (t) {
+                            console.log('start transaction');
+                            const orderPromises = [];
+                            for (let i = 0; i < orderData.numberPackage; i++) {
+                                const newPromise = Order.create({
+                                    status: orderData.status,
+                                    customerIdentity: orderData.customerIdentity,
+                                    saleId: orderData.saleId,
+                                    channel: orderData.channel,
+                                    createDate: orderData.createDate,
+                                    finishedDate: orderData.finishedDate,
+                                    priceOrder: orderData.priceOrder,
+                                    note: orderData.note,
+                                    infoOrderLink: orderData.infoOrderLink,
+                                    backupOrderLink: orderData.backupOrderLink,
+                                    paymentStatus: orderData.paymentStatus,
+                                    designerId: orderData.designerId,
+                                    typeDesigner: orderData.typeDesigner,
+                                    idPackage: orderData.idPackage,
+                                    numberPackage: orderData.numberPackage,
+                                    packageOrder: i+1,
+                                    isDelete: false
+                                }, {transaction: t});
+                                orderPromises.push(newPromise);
+                            }
+                            return Promise.all(orderPromises);
+                        }).then(function (result) {
+                            return callback(null,null,200, result);
+                        }).catch(function (err) {
+                            return callback(400, 'fail transaction', 400, null);
+                        });
+                    } else {
+                        return callback(462,'already has package id', 400, null);
+                    }
+                });
+
+
+
+
+                // return Order.Profile.count({ where: { idPackage: orderData.idPackage, isDelete: false } })
+                // .then(count => {
+                //     console.log('count');
+                //     console.log(count);
+                //     if (count != 0) {
+                //         return callback(462,'already has package id', 400, null);
+                //     }
+                //     return Order.sequelize.transaction(function (t) {
+                //         console.log('start transaction');
+                //         const orderPromises = [];
+                //         for (let i = 0; i < orderData.numberPackage; i++) {
+                //             const newPromise = Order.create({
+                //                 status: orderData.status,
+                //                 customerIdentity: orderData.customerIdentity,
+                //                 saleId: orderData.saleId,
+                //                 channel: orderData.channel,
+                //                 createDate: orderData.createDate,
+                //                 finishedDate: orderData.finishedDate,
+                //                 priceOrder: orderData.priceOrder,
+                //                 note: orderData.note,
+                //                 infoOrderLink: orderData.infoOrderLink,
+                //                 backupOrderLink: orderData.backupOrderLink,
+                //                 paymentStatus: orderData.paymentStatus,
+                //                 designerId: orderData.designerId,
+                //                 typeDesigner: orderData.typeDesigner,
+                //                 idPackage: orderData.idPackage,
+                //                 numberPackage: orderData.numberPackage,
+                //                 packageOrder: i,
+                //                 isDelete: false
+                //             }, {transaction: t});
+                //             orderPromises.push(newPromise);
+                //         }
+                //         return Promise.all(orderPromises);
+                //     }).then(function (result) {
+                //         return callback(null,null,200, result);
+                //     }).catch(function (err) {
+                //         return callback(400, 'fail transaction', 400, null);
+                //     });
+                // });
+            } else {
+                return  Order.create({
+                    status: orderData.status,
+                    customerIdentity: orderData.customerIdentity,
+                    saleId: orderData.saleId,
+                    channel: orderData.channel,
+                    createDate: orderData.createDate,
+                    finishedDate: orderData.finishedDate,
+                    priceOrder: orderData.priceOrder,
+                    note: orderData.note,
+                    infoOrderLink: orderData.infoOrderLink,
+                    backupOrderLink: orderData.backupOrderLink,
+                    paymentStatus: orderData.paymentStatus,
+                    designerId: orderData.designerId,
+                    typeDesigner: orderData.typeDesigner,
+                    idPackage: orderData.idPackage,
+                    numberPackage: orderData.numberPackage,
+                    isDelete: false
+                }).then( (order) => {
+                    return callback(null,null,200, order);
+                });
+            }
         } catch (err) {
             return callback(521, 'system', 500, null);
         }
@@ -107,4 +198,16 @@ module.exports = {
             return callback(5170, 'system', 500, error, null);
         }
     },
+
+    isPackageIdUnique: function (idPackage) {
+        console.log('isPackageIdUnique11111');
+        return Order.Profile.count({ where: { idPackage: idPackage, isDelete: false } })
+          .then(count => {
+            if (count != 0) {
+                Order.Profile
+              return false;
+            }
+            return true;
+        });
+    }
 };
