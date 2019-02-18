@@ -89,7 +89,7 @@ var sendError = function (res, errorCode, errorMessage, httpStatus) {
     var status = httpStatus ? httpStatus : 500;
 
     out.error = errorCode;
-    out.info = errmsg;
+    out.message = errmsg;
 
     res.status(status);
     res.contentType('json');

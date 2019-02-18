@@ -1,7 +1,7 @@
 
 module.exports = {
     statusEnum: ['ACTIVATED', 'DEACTIVATED', 'DELETED', 'WAITING_APPROVE', 'NONE'],
-    orderStatusEnum: ['new', 'pending', 'done'],
+    orderStatusEnum: ['new', 'pending', 'done', 'cancelled'],
     paymentStatusEnum: ['TT', 'CTT'],
     typeDesignerEnum:  ['online', 'offline'],
     serverError: 'Internal server error',

@@ -50,6 +50,7 @@ const orderController = () => {
     }
     await orderManager.update(
         {
+            id: body.id,
             status: body.status,
             customerIdentity: body.customerIdentity,
             saleId: body.saleId,
