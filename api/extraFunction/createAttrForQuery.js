@@ -3,7 +3,7 @@ const filterAndSearch = (query, filterList, searchList) =>{
     attr = {};
     attr.where = {};
     searchText = [];
-    if (query[oConstant.limitGetData] && query[oConstant.limitGetData]) {
+    if (query[oConstant.limitGetData] && query[oConstant.offsetGetData]) {
       attr.limit = query[oConstant.limitGetData];
       attr.offset = (query[oConstant.offsetGetData] - 1) * query[oConstant.limitGetData];
     };

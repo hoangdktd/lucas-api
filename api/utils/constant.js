@@ -30,6 +30,6 @@ module.exports = {
     searchFieldInCommandsColumn: ['name'],
     filterFieldInCommandsColumn: ['name'],
     searchFieldInOrderColumn: ['name'],
-    filterFieldInOrderColumn: ['name'],
+    filterFieldInOrderColumn: ['name', 'startDate', 'endDate'],
     orderStatus: ['ordered', 'delivered', 'cancelled']
 };
