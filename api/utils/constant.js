@@ -1,4 +1,4 @@
-
+ 
 module.exports = {
     statusEnum: ['ACTIVATED', 'DEACTIVATED', 'DELETED', 'WAITING_APPROVE', 'NONE'],
     orderStatusEnum: ['new', 'pending', 'done', 'cancelled'],
@@ -29,7 +29,7 @@ module.exports = {
     filterFieldInProductColumn: ['name'],
     searchFieldInCommandsColumn: ['name'],
     filterFieldInCommandsColumn: ['name'],
-    searchFieldInOrderColumn: ['name'],
-    filterFieldInOrderColumn: ['name', 'startDate', 'endDate'],
+    searchFieldInOrderColumn: ['idPackage'],
+    filterFieldInOrderColumn: ['idPackage', 'startDate', 'endDate', 'designerId', 'customerIdentity', 'infoOrderLink'],
     orderStatus: ['ordered', 'delivered', 'cancelled']
 };
