@@ -15,11 +15,17 @@ const filterAndSearch = (query, filterList, searchList) =>{
       }
       attr.where.$or = searchText;
     };
+
     for (var i = 0; i< filterList.length; i++){
       if (query[filterList[i]]) {
         attr.where[filterList[i]] = query[filterList[i]];
       }
     };
+    if (query['startDate'] && query['endDate']){
+      console.log(query['startDate'])
+      attr.where.createDate = {$between: [query['startDate'], query['endDate']]}
+      console.log(attr.where)
+    }
     attr.where.isDelete = false
     return attr
 }
