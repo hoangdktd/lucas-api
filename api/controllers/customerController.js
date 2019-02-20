@@ -90,7 +90,7 @@ const customerController = () => {
   const getAll = async (req, res) => {
     const { params } = req;
     const {query} = req;
-    const attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInCustomerColumn, oConstant.searchFieldInCustomerColumn);
+    const attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInCustomerColumn, oConstant.searchFieldInCustomerColumn, null);
     await customerManager.getAll( attr, function (errorCode, errorMessage, httpCode, errorDescription, results) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);

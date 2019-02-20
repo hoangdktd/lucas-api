@@ -1,5 +1,5 @@
 const oConstant = require('../utils/constant');
-const filterAndSearch = (query, filterList, searchList) =>{
+const filterAndSearch = (query, filterList, searchList, sortList) =>{
     attr = {};
     attr.where = {};
     searchText = [];
@@ -25,6 +25,14 @@ const filterAndSearch = (query, filterList, searchList) =>{
       console.log(query['startDate'])
       attr.where.createDate = {$between: [query['startDate'], query['endDate']]}
       console.log(attr.where)
+    }
+
+    if (query['sort'] && sortList && query['order']){
+      if (sortList.indexOf(query['sort']) >= 0  && ['DESC', 'ASC'].indexOf(query['order']) >= 0 ){
+        attr.order = 
+          [[query['sort'] , query['order']]]
+        
+      }
     }
     attr.where.isDelete = false
     return attr

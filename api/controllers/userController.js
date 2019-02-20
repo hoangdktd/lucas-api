@@ -148,7 +148,7 @@ const UserController = () => {
   const getAll = async (req, res) => {
     const { params } = req;
     const {query} = req;
-    attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInUserColumn, oConstant.searchFieldInUserColumn);
+    attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInUserColumn, oConstant.searchFieldInUserColumn, null);
     await userManager.getAll(
       attr,
       function (errorCode, errorMessage, httpCode, users) {

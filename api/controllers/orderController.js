@@ -96,7 +96,7 @@ const orderController = () => {
   const getAll = async (req, res) => {
     const { params } = req;
     const {query} = req;
-    const attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInOrderColumn, oConstant.searchFieldInOrderColumn);
+    const attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInOrderColumn, oConstant.searchFieldInOrderColumn, oConstant.sortFieldInOrderColumn);
     await orderManager.getAll( attr, function (errorCode, errorMessage, httpCode, errorDescription, results) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
