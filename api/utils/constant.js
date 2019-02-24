@@ -30,7 +30,7 @@ module.exports = {
     searchFieldInCommandsColumn: ['name'],
     filterFieldInCommandsColumn: ['name'],
     searchFieldInOrderColumn: ['idPackage'],
-    filterFieldInOrderColumn: ['idPackage', 'designerId', 'customerIdentity', 'infoOrderLink'],
-    sortFieldInOrderColumn: ['priceOrder', 'createDate'],
+    filterFieldInOrderColumn: ['idPackage', 'designerId', 'customerIdentity', 'infoOrderLink', 'channel', 'saleId'],
+    sortFieldInOrderColumn: ['priceOrder', 'createDate', 'updatedAt'],
     orderStatus: ['ordered', 'delivered', 'cancelled']
 };
