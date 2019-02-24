@@ -2,6 +2,7 @@
 const Sequelize = require('sequelize');
 // const database = require('../../config/database');
 const Order = require('../models/Order');
+const Customer = require('../models/Customer');
 const uuidv1 = require('uuid/v1');
 const oValidator = require('validator');
 const oConstant = require('../utils/constant');
@@ -9,6 +10,7 @@ const oConstant = require('../utils/constant');
 module.exports = {
     create: async (orderData, callback) => {
         try {
+
             if (orderData.idPackage && orderData.numberPackage > 0) {
                 console.log('isPackageIdUnique');
                 console.log(orderData.idPackage);
@@ -56,26 +58,49 @@ module.exports = {
                     }
                 });
             } else {
-                return  Order.create({
-                    status: orderData.status,
-                    customerIdentity: orderData.customerIdentity,
-                    saleId: orderData.saleId,
-                    channel: orderData.channel,
-                    createDate: orderData.createDate,
-                    finishedDate: orderData.finishedDate,
-                    priceOrder: orderData.priceOrder,
-                    note: orderData.note,
-                    infoOrderLink: orderData.infoOrderLink,
-                    backupOrderLink: orderData.backupOrderLink,
-                    paymentStatus: orderData.paymentStatus,
-                    designerId: orderData.designerId,
-                    typeDesigner: orderData.typeDesigner,
-                    idPackage: orderData.idPackage,
-                    numberPackage: orderData.numberPackage,
-                    isDelete: false
-                }).then( (order) => {
-                    return callback(null,null,200, order);
-                });
+                return Order.sequelize.transaction(function (t) {
+                    const orderPromises = [];
+                    return  Order.create({
+                        status: orderData.status,
+                        customerIdentity: orderData.customerIdentity,
+                        saleId: orderData.saleId,
+                        channel: orderData.channel,
+                        createDate: orderData.createDate,
+                        finishedDate: orderData.finishedDate,
+                        priceOrder: orderData.priceOrder,
+                        note: orderData.note,
+                        infoOrderLink: orderData.infoOrderLink,
+                        backupOrderLink: orderData.backupOrderLink,
+                        paymentStatus: orderData.paymentStatus,
+                        designerId: orderData.designerId,
+                        typeDesigner: orderData.typeDesigner,
+                        idPackage: orderData.idPackage,
+                        numberPackage: orderData.numberPackage,
+                        isDelete: false
+                    }, {transaction: t}).then( (order) => {
+                        console.log(order.customerIdentity);
+                        orderPromises.push(
+                            Customer.findById( order.customerIdentity
+                            , {transaction: t}).then( (customer) => {
+                                if(!customer) {
+                                   
+                                } else {
+                                    const totalSpent = customer.totalSpent + order.priceOrder;
+                                    return customer.update({
+                                        totalSpent: totalSpent
+                                    }, {transaction: t});
+                                }
+                            })
+                        );
+                        return Promise.all(orderPromises);
+                        })
+
+                }).then(function (result) {
+                            return callback(null,null,200, result);
+                        }).catch(function (err) {
+                            return callback(400, 'fail transaction', 400, null);
+                        })
+                    
             }
         } catch (err) {
             return callback(521, 'system', 500, null);
@@ -105,6 +130,12 @@ module.exports = {
                     typeDesigner: params.typeDesigner,
                     idPackage: params.idPackage,
                     numberPackage: params.numberPackage
+                }).then( order => {
+                    Customer.findById(order.customerIdentity
+                        ).then(customer =>
+                            customer.updateAttributes({
+                                totalSpent : customer.totalSpent - order.priceOrder
+                        }))
                 }).then( order => {
                     return callback(null,null,200, order);
                 });
@@ -147,6 +178,12 @@ module.exports = {
             }).then( order => {
                 order.updateAttributes({
                     isDelete : true
+                }).then(order => {
+                    Customer.findById(order.customerIdentity
+                        ).then(customer =>
+                            customer.updateAttributes({
+                                totalSpent : customer.totalSpent - order.priceOrder
+                        }))
                 }).then( order => {
                     return callback(null,null,200, null);
                 });
