@@ -29,19 +29,9 @@ const Order = sequelize.define('order', {
   },
   customerIdentity: {
     type: Sequelize.INTEGER,
-    reference: {
-      model: Customer,
-      key: 'id',
-      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
-    }
   },
   saleId: {
     type: Sequelize.INTEGER,
-    reference: {
-      model: User,
-      key: 'id',
-      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
-    }
   },
   channel: {
     type: Sequelize.STRING,
@@ -71,11 +61,6 @@ const Order = sequelize.define('order', {
   },
   designerId: {
     type: Sequelize.INTEGER,
-    reference: {
-      model: User,
-      key: 'id',
-      deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE
-    }
   },
   typeDesigner: {
     type: Sequelize.ENUM,

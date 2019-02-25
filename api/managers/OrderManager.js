@@ -90,6 +90,9 @@ module.exports = {
             } else {
                 return Order.sequelize.transaction(function (t) {
                     const orderPromises = [];
+                    console.log('22222');
+                    console.log(typeof (orderData.priceOrder));
+                    console.log(parseFloat(orderData.priceOrder));
                     return  Order.create({
                         status: orderData.status,
                         customerIdentity: orderData.customerIdentity,
@@ -97,7 +100,7 @@ module.exports = {
                         channel: orderData.channel,
                         createDate: orderData.createDate,
                         finishedDate: orderData.finishedDate,
-                        priceOrder: orderData.priceOrder,
+                        priceOrder: parseFloat(orderData.priceOrder),
                         note: orderData.note,
                         infoOrderLink: orderData.infoOrderLink,
                         backupOrderLink: orderData.backupOrderLink,
@@ -108,9 +111,14 @@ module.exports = {
                         numberPackage: orderData.numberPackage,
                         isDelete: false
                     }, {transaction: t}).then( (order) => {
+                        console.log('order.id');
+                        console.log(order.id);
                         return Customer.findById( order.customerIdentity , {transaction: t})
                         .then( (customer) => {
+                            console.log('22222');
                                 const totalSpent = parseFloat(customer.totalSpent) + parseFloat(order.priceOrder);
+                                console.log('2333333');
+                                console.log(parseFloat(totalSpent));
                                 return customer.updateAttributes({
                                     totalSpent: parseFloat(totalSpent)
                                 }, {transaction: t});
@@ -119,6 +127,7 @@ module.exports = {
                 }).then(function (result) {
                     return callback(null,null,200, result);
                 }).catch(function (err) {
+                    console.log(err);
                     return callback(400, 'fail transaction', 400, null);
                 })
             }
@@ -156,6 +165,7 @@ module.exports = {
                         numberPackage: params.numberPackage
                     }, {transaction: t}).then(function (orders) {
                         let changePrice = 0;
+                        console.log('2111111');
                         if (params.status !== oConstant.orderStatusEnum[3]) {
                             if (oldStatus === oConstant.orderStatusEnum[3]) {
                                 changePrice = params.priceOrder ? parseFloat(params.priceOrder) : parseFloat(oldPrice);
@@ -167,6 +177,7 @@ module.exports = {
                                 changePrice = 0 - parseFloat(oldPrice);
                             }
                         }
+                        console.log('22222');
                         return Customer.findById(orders.customerIdentity, {transaction: t}).
                             then((customer) =>{
                                 return customer.updateAttributes({

@@ -19,6 +19,7 @@ module.exports = {
                 facebookLink: customerData.facebookLink,
                 note: customerData.note,
                 channel: customerData.channel,
+                totalSpent: 0,
                 isDelete: false
             }).then( (customer) => {
                 return callback(null,null,200, customer);
