@@ -8,12 +8,12 @@ const uuidv1 = require('uuid/v1');
 const oValidator = require('validator');
 const oConstant = require('../utils/constant');
 
-Customer.hasMany(Order, {foreignKey: 'id', as: 'customer'});
-User.hasMany(Order, {foreignKey: 'id', as: 'sale'});
-User.hasMany(Order, {foreignKey: 'id', as: 'designer'});
-Order.belongsTo(Customer, {foreignKey: 'customerIdentity', as: 'customer'});
-Order.belongsTo(User, {foreignKey: 'saleId', as: 'sale'});
-Order.belongsTo(User, {foreignKey: 'designerId', as: 'designer'});
+// Customer.hasMany(Order, {foreignKey: 'id', as: 'customer'});
+// User.hasMany(Order, {foreignKey: 'id', as: 'sale'});
+// User.hasMany(Order, {foreignKey: 'id', as: 'designer'});
+// Order.belongsTo(Customer, {foreignKey: 'customerIdentity', as: 'customer'});
+// Order.belongsTo(User, {foreignKey: 'saleId', as: 'sale'});
+// Order.belongsTo(User, {foreignKey: 'designerId', as: 'designer'});
 
 module.exports = {
     create: async (orderData, callback) => {
@@ -208,7 +208,7 @@ module.exports = {
     },
     getAll: function( queryContent, callback){
         try {
-            queryContent['include'] = ['customer', 'sale', 'designer'];
+            // queryContent['include'] = ['customer', 'sale', 'designer'];
             const orders = Order.findAndCountAll(queryContent).then(listOrder => {
                 return callback(null,null,200, null, listOrder);
             });
