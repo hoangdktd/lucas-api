@@ -29,6 +29,8 @@ module.exports = {
     filterFieldInProductColumn: ['name'],
     searchFieldInCommandsColumn: ['name'],
     filterFieldInCommandsColumn: ['name'],
+    searchFieldInChannelColumn: ['name'],
+    filterFieldInChannelColumn: ['name'],
     searchFieldInOrderColumn: ['idPackage'],
     filterFieldInOrderColumn: ['idPackage', 'designerId', 'customerIdentity', 'infoOrderLink', 'channel', 'saleId'],
     sortFieldInOrderColumn: ['priceOrder', 'createDate', 'updatedAt'],
