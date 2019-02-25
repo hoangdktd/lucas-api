@@ -8,12 +8,12 @@ const uuidv1 = require('uuid/v1');
 const oValidator = require('validator');
 const oConstant = require('../utils/constant');
 
-// Customer.hasMany(Order, {foreignKey: 'id', as: 'customer'});
-// User.hasMany(Order, {foreignKey: 'id', as: 'sale'});
-// User.hasMany(Order, {foreignKey: 'id', as: 'designer'});
-// Order.belongsTo(Customer, {foreignKey: 'customerIdentity', as: 'customer'});
-// Order.belongsTo(User, {foreignKey: 'saleId', as: 'sale'});
-// Order.belongsTo(User, {foreignKey: 'designerId', as: 'designer'});
+Customer.hasMany(Order, {foreignKey: 'id', as: 'customer'});
+User.hasMany(Order, {foreignKey: 'id', as: 'sale'});
+User.hasMany(Order, {foreignKey: 'id', as: 'designer'});
+Order.belongsTo(Customer, {foreignKey: 'customerIdentity', as: 'customer'});
+Order.belongsTo(User, {foreignKey: 'saleId', as: 'sale'});
+Order.belongsTo(User, {foreignKey: 'designerId', as: 'designer'});
 
 module.exports = {
     create: async (orderData, callback) => {
@@ -55,27 +55,27 @@ module.exports = {
                                 }, {transaction: t});
                                 orderPromises.push(newPromise);
                             }
-                            // return Promise.all(orderPromises).then(function(orders) {
-                            //     let newTotalPrice = 0;
-                            //     let customerIdentity = orders[0].customerIdentity;
-                            //     console.log('newTotalPrice');
-                            //     console.log(newTotalPrice);
-                            //     for (let j = 0; j < orders.length; j++) {
-                            //         const childOrder = orders[j];
-                            //         if (childOrder.priceOrder) {
-                            //             newTotalPrice = parseFloat(newTotalPrice) + parseFloat(childOrder.priceOrder);
-                            //         }
-                            //     }
-                            //     console.log('newTotalPrice');
-                            //     console.log(newTotalPrice);
-                            //     return Customer.findById(customerIdentity, {transaction: t}).
-                            //         then((customer) =>{
-                            //             return customer.updateAttributes({
-                            //                 totalSpent : parseFloat(customer.totalSpent) + parseFloat(newTotalPrice)
-                            //             }, {transaction: t});
-                            //         }
-                            //     );
-                            // });
+                            return Promise.all(orderPromises).then(function(orders) {
+                                let newTotalPrice = 0;
+                                let customerIdentity = orders[0].customerIdentity;
+                                console.log('newTotalPrice');
+                                console.log(newTotalPrice);
+                                for (let j = 0; j < orders.length; j++) {
+                                    const childOrder = orders[j];
+                                    if (childOrder.priceOrder) {
+                                        newTotalPrice = parseFloat(newTotalPrice) + parseFloat(childOrder.priceOrder);
+                                    }
+                                }
+                                console.log('newTotalPrice');
+                                console.log(newTotalPrice);
+                                return Customer.findById(customerIdentity, {transaction: t}).
+                                    then((customer) =>{
+                                        return customer.updateAttributes({
+                                            totalSpent : parseFloat(customer.totalSpent) + parseFloat(newTotalPrice)
+                                        }, {transaction: t});
+                                    }
+                                );
+                            });
                             return Promise.all(orderPromises);
                         }).then(function (result) {
                             return callback(null,null,200, result);
@@ -208,7 +208,7 @@ module.exports = {
     },
     getAll: function( queryContent, callback){
         try {
-            // queryContent['include'] = ['customer', 'sale', 'designer'];
+            queryContent['include'] = ['customer', 'sale', 'designer'];
             const orders = Order.findAndCountAll(queryContent).then(listOrder => {
                 return callback(null,null,200, null, listOrder);
             });
