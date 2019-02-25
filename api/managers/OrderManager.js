@@ -55,10 +55,32 @@ module.exports = {
                                 }, {transaction: t});
                                 orderPromises.push(newPromise);
                             }
+                            // return Promise.all(orderPromises).then(function(orders) {
+                            //     let newTotalPrice = 0;
+                            //     let customerIdentity = orders[0].customerIdentity;
+                            //     console.log('newTotalPrice');
+                            //     console.log(newTotalPrice);
+                            //     for (let j = 0; j < orders.length; j++) {
+                            //         const childOrder = orders[j];
+                            //         if (childOrder.priceOrder) {
+                            //             newTotalPrice = parseFloat(newTotalPrice) + parseFloat(childOrder.priceOrder);
+                            //         }
+                            //     }
+                            //     console.log('newTotalPrice');
+                            //     console.log(newTotalPrice);
+                            //     return Customer.findById(customerIdentity, {transaction: t}).
+                            //         then((customer) =>{
+                            //             return customer.updateAttributes({
+                            //                 totalSpent : parseFloat(customer.totalSpent) + parseFloat(newTotalPrice)
+                            //             }, {transaction: t});
+                            //         }
+                            //     );
+                            // });
                             return Promise.all(orderPromises);
                         }).then(function (result) {
                             return callback(null,null,200, result);
                         }).catch(function (err) {
+                            console.log(err);
                             return callback(400, 'fail transaction', 400, null);
                         });
                     } else {
@@ -86,27 +108,19 @@ module.exports = {
                         numberPackage: orderData.numberPackage,
                         isDelete: false
                     }, {transaction: t}).then( (order) => {
-                        console.log(order.customerIdentity);
-                        orderPromises.push(
-                            Customer.findById( order.customerIdentity
-                            , {transaction: t}).then( (customer) => {
-                                if(!customer) {
-                                } else {
-                                    const totalSpent = customer.totalSpent + order.priceOrder;
-                                    return customer.update({
-                                        totalSpent: totalSpent
-                                    }, {transaction: t});
-                                }
-                            })
-                        );
-                        return Promise.all(orderPromises);
-                        })
-
+                        return Customer.findById( order.customerIdentity , {transaction: t})
+                        .then( (customer) => {
+                                const totalSpent = parseFloat(customer.totalSpent) + parseFloat(order.priceOrder);
+                                return customer.updateAttributes({
+                                    totalSpent: parseFloat(totalSpent)
+                                }, {transaction: t});
+                            });
+                        });
                 }).then(function (result) {
-                            return callback(null,null,200, result);
-                        }).catch(function (err) {
-                            return callback(400, 'fail transaction', 400, null);
-                        })
+                    return callback(null,null,200, result);
+                }).catch(function (err) {
+                    return callback(400, 'fail transaction', 400, null);
+                })
             }
         } catch (err) {
             return callback(521, 'system', 500, null);
@@ -114,37 +128,64 @@ module.exports = {
     },
     update: async(params, callback) => {
         try {
-            const resultOrder = await Order.findOne({
-                where: {
-                    id: params.id,
-                    isDelete: false
-                },
-            }).then( order => {
-                return order.updateAttributes({
-                    status: params.status,
-                    customerIdentity: params.customerIdentity,
-                    saleId: params.saleId,
-                    channel: params.channel,
-                    createDate: params.createDate,
-                    finishedDate: params.finishedDate,
-                    priceOrder: params.priceOrder,
-                    note: params.note,
-                    infoOrderLink: params.infoOrderLink,
-                    backupOrderLink: params.backupOrderLink,
-                    paymentStatus: params.paymentStatus,
-                    designerId: params.designerId,
-                    typeDesigner: params.typeDesigner,
-                    idPackage: params.idPackage,
-                    numberPackage: params.numberPackage
-                }).then( order => {
-                    Customer.findById(order.customerIdentity
-                        ).then(customer =>
-                            customer.updateAttributes({
-                                totalSpent : customer.totalSpent - order.priceOrder
-                        }))
-                }).then( order => {
-                    return callback(null,null,200, order);
+            return Order.sequelize.transaction(function (t) {
+                console.log('start transaction');
+                return Order.findOne({
+                    where: {
+                        id: params.id,
+                        isDelete: false
+                    },
+                }, {transaction: t}).then(function(orders) {
+                    const oldStatus = orders.status;
+                    const oldPrice = orders.priceOrder;
+                    return orders.updateAttributes({
+                        status: params.status,
+                        customerIdentity: params.customerIdentity,
+                        saleId: params.saleId,
+                        channel: params.channel,
+                        createDate: params.createDate,
+                        finishedDate: params.finishedDate,
+                        priceOrder: params.priceOrder,
+                        note: params.note,
+                        infoOrderLink: params.infoOrderLink,
+                        backupOrderLink: params.backupOrderLink,
+                        paymentStatus: params.paymentStatus,
+                        designerId: params.designerId,
+                        typeDesigner: params.typeDesigner,
+                        idPackage: params.idPackage,
+                        numberPackage: params.numberPackage
+                    }, {transaction: t}).then(function (orders) {
+                        let changePrice = 0;
+                        if (params.status !== oConstant.orderStatusEnum[3]) {
+                            if (oldStatus === oConstant.orderStatusEnum[3]) {
+                                changePrice = params.priceOrder ? parseFloat(params.priceOrder) : parseFloat(oldPrice);
+                            } else {
+                                changePrice = parseFloat(params.priceOrder) - parseFloat(oldPrice);
+                            }
+                        } else {
+                            if (oldStatus !== oConstant.orderStatusEnum[3]) {
+                                changePrice = 0 - parseFloat(oldPrice);
+                            }
+                        }
+                        return Customer.findById(orders.customerIdentity, {transaction: t}).
+                            then((customer) =>{
+                                return customer.updateAttributes({
+                                    totalSpent : parseFloat(customer.totalSpent) + parseFloat(changePrice)
+                                }, {transaction: t});
+                            }
+                        );
+                    });
                 });
+
+            }).then(function (result) {
+                // Transaction has been committed
+                // result is whatever the result of the promise chain returned to the transaction callback
+                return callback(null,null,200, result);
+            }).catch(function (err) {
+                // Transaction has been rolled back
+                // err is whatever rejected the promise chain returned to the transaction callback
+                console.log(err);
+                return callback(400, 'fail transaction', 400, null);
             });
         } catch (err) {
             // better save it to log file
@@ -178,24 +219,36 @@ module.exports = {
 
     delete: async function( params, callback){
         try {
-            const resultOrder = Order.findOne({
-                where: {
-                    id: params.id,
-                },
-            }).then( order => {
-                order.updateAttributes({
-                    isDelete : true
-                }).then(order => {
-                    Customer.findById(order.customerIdentity
-                        ).then(customer =>
-                            customer.updateAttributes({
-                                totalSpent : customer.totalSpent - order.priceOrder
-                        }))
-                }).then( order => {
-                    return callback(null,null,200, null);
+            return Order.sequelize.transaction(function (t) {
+                console.log('start transaction');
+                return Order.findOne({
+                    where: {
+                        id: params.id
+                    },
+                }, {transaction: t}).then(function(orders) {
+                    return orders.updateAttributes({
+                        isDelete : true
+                    }, {transaction: t}).then(function(orders) {
+                            return Customer.findById(orders.customerIdentity, {transaction: t}).
+                                then((customer) =>{
+                                    return customer.updateAttributes({
+                                        totalSpent : parseFloat(customer.totalSpent) - parseFloat(order.priceOrder)
+                                    });
+                                }
+                            );
+                    });
                 });
+
+            }).then(function (result) {
+                // Transaction has been committed
+                // result is whatever the result of the promise chain returned to the transaction callback
+                return callback(null,null,200, result);
+            }).catch(function (err) {
+                // Transaction has been rolled back
+                // err is whatever rejected the promise chain returned to the transaction callback
+                return callback(400, 'fail transaction', 400, null);
             });
-        }catch(error){
+        } catch (error) {
             return callback(5170, 'system', 500, error, null);
         }
     },
