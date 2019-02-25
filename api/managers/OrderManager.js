@@ -3,9 +3,17 @@ const Sequelize = require('sequelize');
 // const database = require('../../config/database');
 const Order = require('../models/Order');
 const Customer = require('../models/Customer');
+const User = require('../models/User');
 const uuidv1 = require('uuid/v1');
 const oValidator = require('validator');
 const oConstant = require('../utils/constant');
+
+Customer.hasMany(Order, {foreignKey: 'id', as: 'customer'});
+User.hasMany(Order, {foreignKey: 'id', as: 'sale'});
+User.hasMany(Order, {foreignKey: 'id', as: 'designer'});
+Order.belongsTo(Customer, {foreignKey: 'customerIdentity', as: 'customer'});
+Order.belongsTo(User, {foreignKey: 'saleId', as: 'sale'});
+Order.belongsTo(User, {foreignKey: 'designerId', as: 'designer'});
 
 module.exports = {
     create: async (orderData, callback) => {
@@ -83,7 +91,6 @@ module.exports = {
                             Customer.findById( order.customerIdentity
                             , {transaction: t}).then( (customer) => {
                                 if(!customer) {
-                                   
                                 } else {
                                     const totalSpent = customer.totalSpent + order.priceOrder;
                                     return customer.update({
@@ -100,7 +107,6 @@ module.exports = {
                         }).catch(function (err) {
                             return callback(400, 'fail transaction', 400, null);
                         })
-                    
             }
         } catch (err) {
             return callback(521, 'system', 500, null);
@@ -161,6 +167,7 @@ module.exports = {
     },
     getAll: function( queryContent, callback){
         try {
+            queryContent['include'] = ['customer', 'sale', 'designer'];
             const orders = Order.findAndCountAll(queryContent).then(listOrder => {
                 return callback(null,null,200, null, listOrder);
             });
