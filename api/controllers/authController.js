@@ -21,13 +21,13 @@ const AuthController = () => {
     //Check create admin by masterkey
     if( body.userRole == 0) {
       if (body.masterKey != masterKey)
-        return res.status(400).json({  msg: 'You need masterkey to create admin' });
+        return oRest.sendError(res, 400, "You need masterkey to create admin", 400);
     } else if (token) {
-      if (token.role > 0) {
-        return res.status(400).json({  msg: 'Only admin can create new user' });
+        if (token.role > 0) {
+          return oRest.sendError(res, 400, "Only admin can create new user", 400);
+      } else {
+        return oRest.sendError(res, 400, "You need add token", 400);
       }
-    } else {
-      return res.status(400).json({  msg: 'You need add token' });
     }
     await userManager.get(
       body,
@@ -47,7 +47,7 @@ const AuthController = () => {
             }
           )
         }
-        return res.status(400).json({  msg: 'You is already exist' });
+        return oRest.sendError(res, 400, "User is already exits", 400);
       }
     );
   };
@@ -70,7 +70,7 @@ const AuthController = () => {
           // oResData.data.user = returnUser;
           return oRest.sendSuccess(res, {token: token, user: returnUser}, httpCode);
         } else {
-          return res.status(400).json({  msg: 'Wrong password' });
+            return oRest.sendError(res, 400, "Wrong password", 400);
         }
       }
     )

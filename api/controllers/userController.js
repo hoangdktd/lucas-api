@@ -38,7 +38,7 @@ const UserController = () => {
             }
           )
         }
-        return res.status(400).json({  msg: 'You is already exist' });
+        return oRest.sendError(res, 400, "User is already exits", 400);
       }
     );
   };
@@ -78,7 +78,7 @@ const UserController = () => {
     console.log('userId ========    ' + params.userId);
 
     if (token.role > 0) {
-      return res.status(400).json({  msg: 'Only admin can delete new user' });
+      return oRest.sendError(res, 400, "Only admin can delete user", 400);
     }
     const id = req.params.id || req.query.id || '';
     await userManager.delete(
@@ -125,7 +125,7 @@ const UserController = () => {
             }
           );
         } else {
-          return res.status(400).json({  msg: 'Wrong password' });
+          return oRest.sendError(res, 400, "Wrong password", 400);
         } 
       }
     )
