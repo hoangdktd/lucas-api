@@ -7,6 +7,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const commandsRoutes = require('./routes/commandsRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const channelRoutes = require('./routes/channelRoutes');
 
 const config = {
   migrate: false,
@@ -19,7 +20,8 @@ const config = {
   categoryRoutes,
   productRoutes,
   commandsRoutes,
-  orderRoutes
+  orderRoutes,
+  channelRoutes
 };
 
 module.exports = config;

@@ -32,6 +32,8 @@ const mappedCategoryRoutes = mapRoutes(config.categoryRoutes, 'api/controllers/'
 const mappedProductRoutes = mapRoutes(config.productRoutes, 'api/controllers/');
 const mappedCommandsRoutes = mapRoutes(config.commandsRoutes, 'api/controllers/');
 const mappedOrderRoutes = mapRoutes(config.orderRoutes, 'api/controllers/');
+const mappedChannelRoutes = mapRoutes(config.channelRoutes, 'api/controllers/');
+
 const DB = dbService(environment, config.migrate).start();
 
 // allow cross origin requests
@@ -58,6 +60,7 @@ app.all('/categories*', (req, res, next) => auth(req, res, next));
 app.all('/products*', (req, res, next) => auth(req, res, next));
 app.all('/commands*', (req, res, next) => auth(req, res, next));
 app.all('/order*', (req, res, next) => auth(req, res, next));
+app.all('/channels*', (req, res, next) => auth(req, res, next));
 // fill routes for express application
 app.use('/auth', mappedAuthRoutes);
 app.use('/recharge', mappedRechargeRoutes);
@@ -68,6 +71,7 @@ app.use('/categories', mappedCategoryRoutes);
 app.use('/products', mappedProductRoutes);
 app.use('/commands', mappedCommandsRoutes);
 app.use('/order', mappedOrderRoutes);
+app.use('/channels', mappedChannelRoutes);
 
 server.listen(config.port, (err) => {
   console.log('---------------   '  + config.port);

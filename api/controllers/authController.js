@@ -69,6 +69,8 @@ const AuthController = () => {
           // oResData.data.token = token;
           // oResData.data.user = returnUser;
           return oRest.sendSuccess(res, {token: token, user: returnUser}, httpCode);
+        } else {
+          return res.status(400).json({  msg: 'Wrong password' });
         }
       }
     )

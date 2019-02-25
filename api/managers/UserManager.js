@@ -65,19 +65,21 @@ module.exports = {
     },
     update: async(params, callback) => {
         try {
-            let user = await params.user.update({
+            let user = await params.user.updateAttributes({
                 userId: params.body.userId,
                 email : params.body.email,
                 userType : params.body.userType,
                 displayName :  params.body.displayName,
                 userRole : params.body.userRole,
-                userType : userTypeList[params.body.userRole]
+                userType : userTypeList[params.body.userRole],
+                password : params.body.password
             });
             if(!user) {
                 return callback(400, 'Cannot update user, duplicated userId', 400, null);
             }
             return callback(null,null,200, user);
         } catch (err) {
+            console.log(err)
             // better save it to log file
             return callback(500, 'Internal server error', 500, null);
         }

@@ -74,7 +74,6 @@ const UserController = () => {
     const { body } = req;
     const { params } = req;
     const { token } = req;
-    console.log(req);
     console.log('Backend recieve API DELETE USER: ');
     console.log('userId ========    ' + params.userId);
 
@@ -100,20 +99,21 @@ const UserController = () => {
     const { body } = req;
     const { params } = req;
     const token  = req.header('X-Access-Token');
-    console.log(req);
     console.log('Backend recieve API CHANGE PASS USER: ');
-    console.log('userId ========    ' + params.userId);
+    console.log(params)
+    console.log('userId ========    ' + params.id);
     await userManager.get(
       params,
       async function (errorCode, errorMessage, httpCode, returnUser) {
+        console.log("get user")
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode);
         }
-        if ((bcryptService().comparePassword(body.oldPassword, returnUser.password))){
+        if ((bcryptService().comparePassword(body.password, returnUser.password))){
           returnUser.password = body.newPassword;
           returnUser.password = bcryptService().password(returnUser);
           await userManager.update(
-            returnUser,
+            { user: returnUser, body: returnUser},
             function (errorCode, errorMessage, httpCode, returnNewUser) {
               if (errorCode) {
                   return oRest.sendError(res, errorCode, errorMessage, httpCode);
@@ -124,6 +124,8 @@ const UserController = () => {
               return oRest.sendSuccess(res, oResData, httpCode);
             }
           );
+        } else {
+          return res.status(400).json({  msg: 'Wrong password' });
         } 
       }
     )
