@@ -44,7 +44,7 @@ const Order = sequelize.define('order', {
     type: Sequelize.DATE
   },
   priceOrder: {
-    type: Sequelize.INTEGER
+    type: Sequelize.FLOAT
   },
   note: {
     type: Sequelize.STRING

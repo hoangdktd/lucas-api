@@ -40,7 +40,7 @@ const Customer = sequelize.define('customer', {
     type: Sequelize.STRING,
   },
   totalSpent: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.FLOAT,
   },
   timeWorking: {
     type: Sequelize.FLOAT,
