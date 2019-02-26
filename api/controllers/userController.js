@@ -12,13 +12,13 @@ const UserController = () => {
     const { body } = req;
     const { token } = req;
     console.log('CREATE NEW USER');
-    console.log('userId ========    ' + body.userId);
+    console.log('userId ========    ' + body.id);
     console.log('displayName ========    ' + body.displayName);
     console.log('password ========    ' + body.password);
     console.log('role number ========    ' + body.userRole);
     console.log(token);
     //Check create admin by masterkey
-    if (token.role > 0) {
+    if (token.role > oConstant.userRoleUser) {
         return res.status(400).json({  msg: 'Only admin can create new user' });
     }
     await userManager.getUserId(
@@ -32,7 +32,7 @@ const UserController = () => {
                   return oRest.sendError(res, errorCode, errorMessage, httpCode);
               }
               let oResData = {};
-              oResData = returnUser;
+              oResData.user = returnUser;
               oResData.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
               return oRest.sendSuccess(res, oResData, httpCode);
             }
@@ -140,8 +140,8 @@ const UserController = () => {
         }
         const token = authService().issue({ userId: returnUser.id, role: returnUser.userRole }); // need check jwt hoangdktd
         let oResData = {};
-        oResData.token = token;
         oResData.user = returnUser;
+        oResData.token = token;
         return oRest.sendSuccess(res, returnUser, httpCode);
       }
     )

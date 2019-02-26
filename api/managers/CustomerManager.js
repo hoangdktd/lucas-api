@@ -10,9 +10,8 @@ module.exports = {
     create: async (customerData, callback) => {
         try {
             return  Customer.create({
-                // customerId: uuidv1(),
+                id: customerData.id,
                 displayName: customerData.displayName ? customerData.displayName : '',
-                customerIdentity: customerData.customerIdentity,
                 email: customerData.email,
                 birthday: customerData.birthday,
                 address: customerData.address ? customerData.address : '',
@@ -30,15 +29,9 @@ module.exports = {
     },
     update: async(params, callback) => {
         try {
-            const resultCustomer = await Customer.findOne({
-                where: {
-                    id: params.id,
-                    isDelete: false
-                },
-            }).then( customer => {
+            const resultCustomer = await Customer.findById(params.id).then( customer => {
                 return customer.updateAttributes({
                     email : params.email,
-                    customerIdentity: params.customerIdentity,
                     displayName : params.displayName,
                     birthday :  params.birthday,
                     address : params.address,
@@ -80,11 +73,7 @@ module.exports = {
 
     delete: async function( params, callback){
         try {
-            const resultCustomer = Customer.findOne({
-                where: {
-                    id: params.id,
-                },
-            }).then( customer => {
+            const resultCustomer = Customer.findbyId(params.id).then( customer => {
                 customer.updateAttributes({
                     isDelete : true
                 }).then( customer => {

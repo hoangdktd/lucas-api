@@ -21,30 +21,11 @@ module.exports = {
         }
     },
 
-    getUserId: async (param, callback) => {
-        try {
-            const user = await User.findOne({
-                where: {
-                    userId: param.userId,
-                },
-            });
-
-            if(!user) {
-                return callback(400, 'Bad Request: User not found', 400, null);
-            }
-
-            return callback(null,null,200, user);
-        } catch (err) {
-            // better save it to log file
-            return callback(500, 'Internal server error', 500, null);
-        }
-    },
-
     create: async(params, callback) => {
         try {
             const user = await User.create({
+                id: params.id,
                 email: params.email,
-                userId: params.userId,
                 userType: params.userType,
                 displayName: params.displayName,
                 password : params.password,
@@ -66,7 +47,7 @@ module.exports = {
     update: async(params, callback) => {
         try {
             let user = await params.user.updateAttributes({
-                userId: params.body.userId,
+                id: params.body.id,
                 email : params.body.email,
                 userType : params.body.userType,
                 displayName :  params.body.displayName,
@@ -75,7 +56,7 @@ module.exports = {
                 password : params.body.password
             });
             if(!user) {
-                return callback(400, 'Cannot update user, duplicated userId', 400, null);
+                return callback(400, 'Cannot update user, duplicated user Id', 400, null);
             }
             return callback(null,null,200, user);
         } catch (err) {

@@ -17,8 +17,10 @@ const tableName = 'channel';
 
 // the actual model
 const Channel = sequelize.define('channel', {
-  name: {
+  id: {
+    primaryKey: true,
     type: Sequelize.STRING,
+    unique: true
   },
   isDelete: {
     type: Sequelize.BOOLEAN,

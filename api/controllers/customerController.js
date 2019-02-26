@@ -16,11 +16,11 @@ const customerController = () => {
     console.log(body.address);
     await customerManager.create(
         {
+          id: body.id,
           displayName: body.displayName,
           email: body.email,
           birthday: body.birthday,
           address: body.address,
-          customerIdentity: body.customerIdentity,
           facebookLink: body.facebookLink,
           note: body.note,
           channel: body.channel
@@ -51,7 +51,6 @@ const customerController = () => {
           email: body.email,
           birthday: body.birthday,
           address: body.address,
-          customerIdentity: body.customerIdentity,
           facebookLink: body.facebookLink,
           note: body.note,
           channel: body.channel
@@ -62,7 +61,6 @@ const customerController = () => {
             }
             var oResData = {};
             oResData.displayName = returnCustomerModel.displayName;
-            oResData.customerIdentity = returnCustomerModel.customerIdentity;
             oResData.id = returnCustomerModel.id;
             return oRest.sendSuccess(res, oResData, httpCode);
         }
@@ -81,9 +79,6 @@ const customerController = () => {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
         }
-        // return oRest.sendSuccess(res, {
-        //   data: results,
-        // }, httpCode);
         return oRest.sendSuccess(res, results, httpCode);
     });
   };

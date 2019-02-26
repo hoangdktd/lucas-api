@@ -10,7 +10,7 @@ module.exports = {
     create: async (channelData, callback) => {
         try {
             return  Channel.create({
-                name: channelData.name ? channelData.name : '',
+                id: channelData.id,
                 isDelete: false
             }).then( (channel) => {
                 return callback(null,null,200, channel);
@@ -28,7 +28,7 @@ module.exports = {
                 },
             }).then( channel => {
                 channel.updateAttributes({
-                    name : params.name
+                    id : params.id
                 }).then( channel => {
                     return callback(null,null,200, channel);
                 });
@@ -39,9 +39,9 @@ module.exports = {
         }
 
     },
-    getOne: async (queryContent, callback) =>{
+    get: async (params, callback) =>{
         try {
-            const channel = await Channel.findById(queryContent.id);
+            const channel = await Channel.findById(params.id);
 
             if(!channel) {
                 return callback(400, 'Bad Request: User not found', 400, null, null);
@@ -64,11 +64,7 @@ module.exports = {
 
     delete: async function( params, callback){
         try {
-            const resultChannel = Channel.findOne({
-                where: {
-                    id: params.id,
-                },
-            }).then( channel => {
+            const resultChannel = Channel.findById(params.id).then( channel => {
                 channel.updateAttributes({
                     isDelete : true
                 }).then( channel => {
@@ -76,6 +72,7 @@ module.exports = {
                 });
             });
         }catch(error){
+            console.log(error)
             return callback(5170, 'system', 500, error, null);
         }
     },

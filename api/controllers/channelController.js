@@ -13,17 +13,36 @@ const channelController = () => {
     if (role > oConstant.userRoleUser) {
       return oRest.sendError(res, 41716, 'invalid right', 403, 'you have no right to access these information');
     }
-    console.log(body.address);
+
+    await channelManager.get(
+      body,
+      async function (errorCode, errorMessage, httpCode, returnChannel) {
+        if (errorCode) {
+          await channelManager.create(
+            body,
+            function (errorCode, errorMessage, httpCode, returnChannel) {
+              if (errorCode) {
+                  return oRest.sendError(res, errorCode, errorMessage, httpCode);
+              }
+              return oRest.sendSuccess(res, returnChannel, httpCode);
+            }
+          )
+        }
+        else {
+          return oRest.sendError(res, 400, "Channel id is already exits", 400);
+        }
+      }
+    );
+
     await channelManager.create(
         {
-          name: body.name
+          id: body.id
         },
         function (errorCode, errorMessage, httpCode, returnChannelModel) {
             if (errorCode) {
                 return oRest.sendError(res, errorCode, errorMessage, httpCode);
             }
             var oResData = {};
-            oResData.name = returnChannelModel.name;
             oResData.id = returnChannelModel.id;
             return oRest.sendSuccess(res, oResData, httpCode);
         }
@@ -39,7 +58,6 @@ const channelController = () => {
     await channelManager.update(
         {
           id: body.id,
-          name: body.name
         },
         function (errorCode, errorMessage, httpCode, returnChannelModel) {
             if (errorCode) {
@@ -61,7 +79,7 @@ const channelController = () => {
     const queryContent = {
       id: id
     }
-    await channelManager.getOne( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, results) {
+    await channelManager.get( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, results) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
         }

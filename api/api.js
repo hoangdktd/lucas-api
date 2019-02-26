@@ -24,13 +24,8 @@ const environment = process.env.NODE_ENV;
 const app = express();
 const server = http.Server(app);
 const mappedAuthRoutes = mapRoutes(config.authRoutes, 'api/controllers/');
-const mappedRechargeRoutes = mapRoutes(config.rechargeRoutes, 'api/controllers/');
-const mappedPaymentRoutes = mapRoutes(config.paymentRoutes, 'api/controllers/');
 const mappedUserRoutes = mapRoutes(config.userRoutes, 'api/controllers/');
 const mappedCustomerRoutes = mapRoutes(config.customerRoutes, 'api/controllers/');
-const mappedCategoryRoutes = mapRoutes(config.categoryRoutes, 'api/controllers/');
-const mappedProductRoutes = mapRoutes(config.productRoutes, 'api/controllers/');
-const mappedCommandsRoutes = mapRoutes(config.commandsRoutes, 'api/controllers/');
 const mappedOrderRoutes = mapRoutes(config.orderRoutes, 'api/controllers/');
 const mappedChannelRoutes = mapRoutes(config.channelRoutes, 'api/controllers/');
 
@@ -54,24 +49,18 @@ app.use(bodyParser.json());
 // secure your private routes with jwt authentication middleware
 // app.all('/private/*', (req, res, next) => auth(req, res, next));
 
-app.all('/user*', (req, res, next) => auth(req, res, next));
-app.all('/customers*', (req, res, next) => auth(req, res, next));
-app.all('/categories*', (req, res, next) => auth(req, res, next));
-app.all('/products*', (req, res, next) => auth(req, res, next));
-app.all('/commands*', (req, res, next) => auth(req, res, next));
-app.all('/order*', (req, res, next) => auth(req, res, next));
-app.all('/channels*', (req, res, next) => auth(req, res, next));
+
+// app.all('//auth*', (req, res, next) => auth(req, res, next));
+app.all('//user*', (req, res, next) => auth(req, res, next));
+app.all('//customers*', (req, res, next) => auth(req, res, next));
+app.all('//orders*', (req, res, next) => auth(req, res, next));
+app.all('//channels*', (req, res, next) => auth(req, res, next));
 // fill routes for express application
-app.use('/auth', mappedAuthRoutes);
-app.use('/recharge', mappedRechargeRoutes);
-app.use('/payment', mappedPaymentRoutes);
-app.use('/user', mappedUserRoutes);
-app.use('/customers', mappedCustomerRoutes);
-app.use('/categories', mappedCategoryRoutes);
-app.use('/products', mappedProductRoutes);
-app.use('/commands', mappedCommandsRoutes);
-app.use('/order', mappedOrderRoutes);
-app.use('/channels', mappedChannelRoutes);
+app.use('//auth', mappedAuthRoutes);
+app.use('//user', mappedUserRoutes);
+app.use('//customers', mappedCustomerRoutes);
+app.use('//orders', mappedOrderRoutes);
+app.use('//channels', mappedChannelRoutes);
 
 server.listen(config.port, (err) => {
   console.log('---------------   '  + config.port);

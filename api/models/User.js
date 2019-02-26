@@ -18,7 +18,8 @@ const tableName = 'user';
 
 // the actual model
 const User = sequelize.define('User', {
-  userId: {
+  id: {
+    primaryKey: true,
     type: Sequelize.STRING,
     unique: true,
   },

@@ -16,9 +16,9 @@ const orderController = () => {
     await orderManager.create(
         {
             status: body.status,
-            customerIdentity: body.customerIdentity,
+            customerId: body.customerId,
             saleId: body.saleId,
-            channel: body.channel,
+            channelId: body.channelId,
             createDate: body.createDate,
             finishedDate: body.finishedDate,
             priceOrder: body.priceOrder,
@@ -51,9 +51,9 @@ const orderController = () => {
         {
             id: body.id,
             status: body.status,
-            customerIdentity: body.customerIdentity,
+            customerId: body.customerId,
             saleId: body.saleId,
-            channel: body.channel,
+            channelId: body.channelId,
             createDate: body.createDate,
             finishedDate: body.finishedDate,
             priceOrder: body.priceOrder,

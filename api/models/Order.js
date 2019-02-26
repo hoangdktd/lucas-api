@@ -27,13 +27,13 @@ const Order = sequelize.define('order', {
     type: Sequelize.ENUM,   //'ordered', 'delivered', 'cancelled'
     values: oConstant.orderStatusEnum
   },
-  customerIdentity: {
-    type: Sequelize.INTEGER,
+  customerId: {
+    type: Sequelize.STRING,
   },
   saleId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
   },
-  channel: {
+  channelId: {
     type: Sequelize.STRING,
   },
   createDate: {
@@ -60,7 +60,7 @@ const Order = sequelize.define('order', {
     values: oConstant.paymentStatusEnum
   },
   designerId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.STRING,
   },
   typeDesigner: {
     type: Sequelize.ENUM,
