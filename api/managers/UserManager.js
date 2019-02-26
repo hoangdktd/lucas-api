@@ -73,13 +73,13 @@ module.exports = {
             if (!user){
                 return callback(null,'User not found',400, null);
             } else {
-                userUpdate = await user.update({
-                    isDeleted: true
+                userUpdate = await user.updateAttributes({
+                    isDelete: true
                 });
                 if (!userUpdate) {
                     return callback(null,'Server error',400, null);
                 } else {
-                    return callback(null,'Server error',200, userUpdate);
+                    return callback(null,'Update sucsses',200, userUpdate);
                 }
             }
         } catch (err) {

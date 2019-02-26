@@ -21,7 +21,7 @@ const UserController = () => {
     if (token.role > oConstant.userRoleUser) {
         return res.status(400).json({  msg: 'Only admin can create new user' });
     }
-    await userManager.getUserId(
+    await userManager.get(
       body,
       async function (errorCode, errorMessage, httpCode, returnUser) {
         if (errorCode) {
@@ -75,12 +75,12 @@ const UserController = () => {
     const { params } = req;
     const { token } = req;
     console.log('Backend recieve API DELETE USER: ');
-    console.log('userId ========    ' + params.userId);
+    console.log('userId ========    ' + params.id);
 
     if (token.role > 0) {
       return oRest.sendError(res, 400, "Only admin can delete user", 400);
     }
-    const id = req.params.id || req.query.id || '';
+    const id = params.id || req.query.id || '';
     await userManager.delete(
       {
         id: id
