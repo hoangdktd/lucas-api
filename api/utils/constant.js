@@ -32,7 +32,7 @@ module.exports = {
     searchFieldInChannelColumn: ['name'],
     filterFieldInChannelColumn: ['name'],
     searchFieldInOrderColumn: ['idPackage'],
-    filterFieldInOrderColumn: ['idPackage', 'designerId', 'customerIdentity', 'infoOrderLink', 'channel', 'saleId'],
+    filterFieldInOrderColumn: ['idPackage', 'designerId', 'customerId', 'infoOrderLink', 'channel', 'saleId'],
     sortFieldInOrderColumn: ['priceOrder', 'createDate', 'updatedAt'],
     orderStatus: ['ordered', 'delivered', 'cancelled']
 };

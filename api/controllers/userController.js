@@ -33,7 +33,6 @@ const UserController = () => {
               }
               let oResData = editUserBecomeSend(returnUser);
               oResData.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
-              console.log(user)
               return oRest.sendSuccess(res, oResData, httpCode);
             }
           )
