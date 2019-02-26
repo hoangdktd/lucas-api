@@ -51,16 +51,16 @@ app.use(bodyParser.json());
 
 
 // app.all('//auth*', (req, res, next) => auth(req, res, next));
-app.all('//user*', (req, res, next) => auth(req, res, next));
-app.all('//customers*', (req, res, next) => auth(req, res, next));
-app.all('//orders*', (req, res, next) => auth(req, res, next));
-app.all('//channels*', (req, res, next) => auth(req, res, next));
+app.all('/user*', (req, res, next) => auth(req, res, next));
+app.all('/customers*', (req, res, next) => auth(req, res, next));
+app.all('/orders*', (req, res, next) => auth(req, res, next));
+app.all('/channels*', (req, res, next) => auth(req, res, next));
 // fill routes for express application
-app.use('//auth', mappedAuthRoutes);
-app.use('//user', mappedUserRoutes);
-app.use('//customers', mappedCustomerRoutes);
-app.use('//orders', mappedOrderRoutes);
-app.use('//channels', mappedChannelRoutes);
+app.use('/auth', mappedAuthRoutes);
+app.use('/user', mappedUserRoutes);
+app.use('/customers', mappedCustomerRoutes);
+app.use('/orders', mappedOrderRoutes);
+app.use('/channels', mappedChannelRoutes);
 
 server.listen(config.port, (err) => {
   console.log('---------------   '  + config.port);
