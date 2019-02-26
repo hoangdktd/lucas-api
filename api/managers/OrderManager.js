@@ -36,9 +36,9 @@ module.exports = {
                             for (let i = 0; i < orderData.numberPackage; i++) {
                                 const newPromise = Order.create({
                                     status: orderData.status,
-                                    customerIdentity: orderData.customerIdentity,
+                                    customerId: orderData.customerId,
                                     saleId: orderData.saleId,
-                                    channel: orderData.channel,
+                                    channelId: orderData.channelId,
                                     createDate: orderData.createDate,
                                     finishedDate: orderData.finishedDate,
                                     priceOrder: orderData.priceOrder,
@@ -57,14 +57,18 @@ module.exports = {
                             }
                             return Promise.all(orderPromises).then(function(orders) {
                                 let newTotalPrice = 0;
-                                let customerIdentity = orders[0].customerIdentity;
+                                let customerId = orders[0].customerId;
+                                console.log('newTotalPrice');
+                                console.log(newTotalPrice);
                                 for (let j = 0; j < orders.length; j++) {
                                     const childOrder = orders[j];
                                     if (childOrder.priceOrder) {
                                         newTotalPrice = parseFloat(newTotalPrice) + parseFloat(childOrder.priceOrder);
                                     }
                                 }
-                                return Customer.findById(customerIdentity, {transaction: t}).
+                                console.log('newTotalPrice');
+                                console.log(newTotalPrice);
+                                return Customer.findById(customerId, {transaction: t}).
                                     then((customer) =>{
                                         return customer.updateAttributes({
                                             totalSpent : parseFloat(customer.totalSpent) + parseFloat(newTotalPrice)
@@ -74,10 +78,11 @@ module.exports = {
                                     }
                                 );
                             });
+                            return Promise.all(orderPromises);
                         }).then(function (result) {
                             return callback(null,null,200, result);
                         }).catch(function (err) {
-
+                            console.log(err);
                             return callback(400, 'fail transaction', 400, null);
                         });
                     } else {
@@ -87,11 +92,13 @@ module.exports = {
             } else {
                 return Order.sequelize.transaction(function (t) {
                     const orderPromises = [];
+                    console.log(typeof (orderData.priceOrder));
+                    console.log(parseFloat(orderData.priceOrder));
                     return  Order.create({
                         status: orderData.status,
-                        customerIdentity: orderData.customerIdentity,
+                        customerId: orderData.customerId,
                         saleId: orderData.saleId,
-                        channel: orderData.channel,
+                        channelId: orderData.channelId,
                         createDate: orderData.createDate,
                         finishedDate: orderData.finishedDate,
                         priceOrder: parseFloat(orderData.priceOrder),
@@ -105,9 +112,13 @@ module.exports = {
                         numberPackage: orderData.numberPackage,
                         isDelete: false
                     }, {transaction: t}).then( (order) => {
-                        return Customer.findById( order.customerIdentity , {transaction: t})
+                        console.log('order.customerId');
+                        console.log(order.customerId);
+                        return Customer.findById( order.customerId , {transaction: t})
                         .then( (customer) => {
+                            console.log(customer);
                                 const totalSpent = parseFloat(customer.totalSpent) + parseFloat(order.priceOrder);
+                                console.log(parseFloat(totalSpent));
                                 return customer.updateAttributes({
                                     totalSpent: parseFloat(totalSpent)
                                 }, {transaction: t}).then (function (customer){
@@ -118,6 +129,7 @@ module.exports = {
                 }).then(function (result) {
                     return callback(null,null,200, result);
                 }).catch(function (err) {
+                    console.log(err);
                     return callback(400, 'fail transaction', 400, null);
                 })
             }
@@ -129,19 +141,17 @@ module.exports = {
         try {
             return Order.sequelize.transaction(function (t) {
                 console.log('start transaction');
-                return Order.findOne({
-                    where: {
-                        id: params.id,
-                        isDelete: false
-                    },
-                }, {transaction: t}).then(function(orders) {
+                return Order.findById(
+                params.id
+                , {transaction: t}).then(function(orders) {
                     const oldStatus = orders.status;
                     const oldPrice = orders.priceOrder;
+                    const oldCustomerId = orders.customerId
                     return orders.updateAttributes({
                         status: params.status,
-                        customerIdentity: params.customerIdentity,
+                        customerId: params.customerId,
                         saleId: params.saleId,
-                        channel: params.channel,
+                        channelId: params.channelId,
                         createDate: params.createDate,
                         finishedDate: params.finishedDate,
                         priceOrder: params.priceOrder,
@@ -155,7 +165,6 @@ module.exports = {
                         numberPackage: params.numberPackage
                     }, {transaction: t}).then(function (orders) {
                         let changePrice = 0;
-                        console.log('2111111');
                         if (params.status !== oConstant.orderStatusEnum[3]) {
                             if (oldStatus === oConstant.orderStatusEnum[3]) {
                                 changePrice = params.priceOrder ? parseFloat(params.priceOrder) : parseFloat(oldPrice);
@@ -167,7 +176,6 @@ module.exports = {
                                 changePrice = 0 - parseFloat(oldPrice);
                             }
                         }
-                        console.log('22222');
                         return Customer.findById(orders.customerIdentity, {transaction: t}).
                             then((customer) =>{
                                 return customer.updateAttributes({
@@ -222,11 +230,9 @@ module.exports = {
         try {
             return Order.sequelize.transaction(function (t) {
                 console.log('start transaction');
-                return Order.findOne({
-                    where: {
-                        id: params.id
-                    },
-                }, {transaction: t}).then(function(orders) {
+                return Order.findById(
+                    params.id
+                , {transaction: t}).then(function(orders) {
                     return orders.updateAttributes({
                         isDelete : true
                     }, {transaction: t}).then(function(orders) {
