@@ -35,9 +35,8 @@ const orderController = () => {
             if (errorCode) {
                 return oRest.sendError(res, errorCode, errorMessage, httpCode);
             }
-            var oResData = {};
-            oResData.id = returnOrderModel.id;
-            return oRest.sendSuccess(res, oResData, httpCode);
+            // var oResData = {};
+            return oRest.sendSuccess(res, returnOrderModel, httpCode);
         }
     );
   };
