@@ -176,7 +176,7 @@ module.exports = {
                                 changePrice = 0 - parseFloat(oldPrice);
                             }
                         }
-                        return Customer.findById(orders.customerIdentity, {transaction: t}).
+                        return Customer.findById(orders.customerId, {transaction: t}).
                             then((customer) =>{
                                 return customer.updateAttributes({
                                     totalSpent : parseFloat(customer.totalSpent) + parseFloat(changePrice)
@@ -202,17 +202,18 @@ module.exports = {
         }
 
     },
-    getOne: async (queryContent, callback) =>{
+    get: async (id, callback) =>{
         try {
-            const order = await Order.findById(queryContent.id);
+            const order = await Order.findById(id);
 
             if(!order) {
-                return callback(400, 'Bad Request: User not found', 400, null, null);
+                return callback(400, 'Bad Request: Order not found', 400, null, null);
             }
 
             return callback(null,null,200, null, order);
         }catch(error){
-            return callback(5170, 'system', 500, error, null);
+            console.log(error)
+            return callback(5170, 'Cannot get order', 500, error, null);
         }
     },
     getAll: function( queryContent, callback){
@@ -236,7 +237,7 @@ module.exports = {
                     return orders.updateAttributes({
                         isDelete : true
                     }, {transaction: t}).then(function(orders) {
-                            return Customer.findById(orders.customerIdentity, {transaction: t}).
+                            return Customer.findById(orders.customerId, {transaction: t}).
                                 then((customer) =>{
                                     return customer.updateAttributes({
                                         totalSpent : parseFloat(customer.totalSpent) - parseFloat(order.priceOrder)

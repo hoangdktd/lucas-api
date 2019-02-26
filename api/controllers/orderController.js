@@ -80,14 +80,11 @@ const orderController = () => {
     if (role > oConstant.userRoleUser) {
       return oRest.sendError(res, 41716, 'invalid right', 403, 'you have no right to access these information');
     }
-    const queryContent = {
-      id: id
-    }
-    await orderManager.getOne( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, result) {
+    await orderManager.get( id, function (errorCode, errorMessage, httpCode, errorDescription, result) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
         }
-        return oRest.sendSuccess(res, returnOrderModel(result), httpCode);
+        return oRest.sendSuccess(res, editOrderBecomeSend(result), httpCode);
     });
   };
   const getAll = async (req, res) => {

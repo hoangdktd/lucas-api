@@ -16,6 +16,7 @@ module.exports = {
 
             return callback(null,null,200, user);
         } catch (err) {
+
             // better save it to log file
             return callback(500, 'Internal server error', 500, null);
         }
@@ -23,7 +24,7 @@ module.exports = {
 
     create: async(params, callback) => {
         try {
-            const user = await User.create({
+            const newUser = await User.create({
                 id: params.id,
                 email: params.email,
                 userType: params.userType,
@@ -34,11 +35,14 @@ module.exports = {
                 isDelete : false
             });
 
-            if(!user) {
+            if(!newUser) {
                 return callback(400, 'Server error', 400, null);
+            } else {
+                return callback(null,null,200, newUser);
             }
-            return callback(null,null,200, user);
+            
         } catch (err) {
+            console.log(err);
             // better save it to log file
             return callback(500, 'Internal server error', 500, null);
         }
