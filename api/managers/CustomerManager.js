@@ -48,7 +48,7 @@ module.exports = {
         }
 
     },
-    getOne: async (queryContent, callback) =>{
+    get: async (queryContent, callback) =>{
         try {
             const customer = await Customer.findById(queryContent.id);
 

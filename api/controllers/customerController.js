@@ -14,28 +14,35 @@ const customerController = () => {
       return oRest.sendError(res, 41716, 'invalid right', 403, 'you have no right to access these information');
     }
     console.log(body.address);
-    await customerManager.create(
-        {
-          id: body.id,
-          displayName: body.displayName,
-          email: body.email,
-          birthday: body.birthday,
-          address: body.address,
-          facebookLink: body.facebookLink,
-          note: body.note,
-          channel: body.channel
-        },
-        function (errorCode, errorMessage, httpCode, returnCustomerModel) {
-            if (errorCode) {
-                return oRest.sendError(res, errorCode, errorMessage, httpCode);
-            }
-            var oResData = {};
-            oResData.displayName = returnCustomerModel.displayName;
-            oResData.customerIdentity = returnCustomerModel.customerIdentity;
-            oResData.id = returnCustomerModel.id;
-            return oRest.sendSuccess(res, oResData, httpCode);
+    await customerManager.get(
+      body,
+      async function (errorCode, errorMessage, httpCode, returnUser) {
+        if (errorCode) {
+          await customerManager.create(
+              {
+                id: body.id,
+                displayName: body.displayName,
+                email: body.email,
+                birthday: body.birthday,
+                address: body.address,
+                facebookLink: body.facebookLink,
+                note: body.note,
+                channel: body.channel
+              },
+              function (errorCode, errorMessage, httpCode, returnCustomerModel) {
+                  if (errorCode) {
+                      return oRest.sendError(res, errorCode, errorMessage, httpCode);
+                  }
+                  var oResData = {};
+                  oResData.displayName = returnCustomerModel.displayName;
+                  oResData.customerIdentity = returnCustomerModel.customerIdentity;
+                  oResData.id = returnCustomerModel.id;
+                  return oRest.sendSuccess(res, oResData, httpCode);
+              }
+          );
         }
-    );
+        return oRest.sendError(res, 400, "Customer is already exits", 400);
+    })
   };
   const updateCustomer = async (req, res) => {
     // body is part of a form-data
@@ -75,7 +82,7 @@ const customerController = () => {
     const queryContent = {
       id: id
     }
-    await customerManager.getOne( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, results) {
+    await customerManager.get( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, results) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
         }
