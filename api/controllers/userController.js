@@ -175,7 +175,6 @@ const UserController = () => {
 };
 
 const editUserBecomeSend = (user) =>{
-  console.log(user);
   data = {};
   data.id = user.id;
   data.email = user.email;

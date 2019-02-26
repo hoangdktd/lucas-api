@@ -36,7 +36,7 @@ const orderController = () => {
                 return oRest.sendError(res, errorCode, errorMessage, httpCode);
             }
             // var oResData = {};
-            return oRest.sendSuccess(res, returnOrderModel, httpCode);
+            return oRest.sendSuccess(res, editOrderBecomeSend(returnOrderModel), httpCode);
         }
     );
   };
@@ -70,9 +70,7 @@ const orderController = () => {
             if (errorCode) {
                 return oRest.sendError(res, errorCode, errorMessage, httpCode);
             }
-            var oResData = {};
-            oResData.id = returnOrderModel.id;
-            return oRest.sendSuccess(res, oResData, httpCode);
+            return oRest.sendSuccess(res, editOrderBecomeSend(returnOrderModel), httpCode);
         }
     );
   };
@@ -85,11 +83,11 @@ const orderController = () => {
     const queryContent = {
       id: id
     }
-    await orderManager.getOne( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, results) {
+    await orderManager.getOne( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, result) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
         }
-        return oRest.sendSuccess(res, results, httpCode);
+        return oRest.sendSuccess(res, returnOrderModel(result), httpCode);
     });
   };
   const getAll = async (req, res) => {
@@ -99,6 +97,10 @@ const orderController = () => {
     await orderManager.getAll( attr, function (errorCode, errorMessage, httpCode, errorDescription, results) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
+        }
+        listOrder = [];
+        for (i = 0; i< results.rows.length; i++) {
+            listOrder.push(editOrderBecomeSend(results.rows[i]));
         }
         return oRest.sendSuccess(res, {
           data: results.rows,
@@ -136,5 +138,10 @@ const orderController = () => {
     deleteOrder
   };
 };
+
+const editOrderBecomeSend = (order) =>{
+  order.isDelete = undefined;
+  return order;
+}
 
 module.exports = orderController;

@@ -24,7 +24,7 @@ const channelController = () => {
               if (errorCode) {
                   return oRest.sendError(res, errorCode, errorMessage, httpCode);
               }
-              return oRest.sendSuccess(res, returnChannel, httpCode);
+              return oRest.sendSuccess(res, editChannelBecomeSend(returnChannel), httpCode);
             }
           )
         }
@@ -38,13 +38,11 @@ const channelController = () => {
         {
           id: body.id
         },
-        function (errorCode, errorMessage, httpCode, returnChannelModel) {
+        function (errorCode, errorMessage, httpCode, channelReturn) {
             if (errorCode) {
                 return oRest.sendError(res, errorCode, errorMessage, httpCode);
             }
-            var oResData = {};
-            oResData.id = returnChannelModel.id;
-            return oRest.sendSuccess(res, oResData, httpCode);
+            return oRest.sendSuccess(res, editChannelBecomeSend(channelReturn), httpCode);
         }
     );
   };
@@ -79,11 +77,11 @@ const channelController = () => {
     const queryContent = {
       id: id
     }
-    await channelManager.get( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, results) {
+    await channelManager.get( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, channelReturn) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
         }
-        return oRest.sendSuccess(res, results, httpCode);
+        return oRest.sendSuccess(res, editChannelBecomeSend(channelReturn), httpCode);
     });
   };
   const getAll = async (req, res) => {
@@ -94,9 +92,13 @@ const channelController = () => {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
         }
+        channelList = []
+        for (i = 0; i< results.rows.length; i++) {
+          channelList.push(editChannelBecomeSend(results.rows[i]));
+        }
         return oRest.sendSuccess(res, {
-          data: results,
-          total: results.length
+          data: channelList,
+          total: results.count
         }, httpCode);
     });
   };
@@ -130,5 +132,10 @@ const channelController = () => {
     deleteChannel
   };
 };
+
+const editChannelBecomeSend = (channel) =>{
+  channel.isDelete = undefined;
+  return channel;
+}
 
 module.exports = channelController;

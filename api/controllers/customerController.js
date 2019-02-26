@@ -33,11 +33,7 @@ const customerController = () => {
                   if (errorCode) {
                       return oRest.sendError(res, errorCode, errorMessage, httpCode);
                   }
-                  var oResData = {};
-                  oResData.displayName = returnCustomerModel.displayName;
-                  oResData.customerIdentity = returnCustomerModel.customerIdentity;
-                  oResData.id = returnCustomerModel.id;
-                  return oRest.sendSuccess(res, oResData, httpCode);
+                  return oRest.sendSuccess(res, editCustomerBecomeSend(returnCustomerModel), httpCode);
               }
           );
         }
@@ -82,11 +78,11 @@ const customerController = () => {
     const queryContent = {
       id: id
     }
-    await customerManager.get( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, results) {
+    await customerManager.get( queryContent, function (errorCode, errorMessage, httpCode, errorDescription, result) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
         }
-        return oRest.sendSuccess(res, results, httpCode);
+        return oRest.sendSuccess(res, editCustomerBecomeSend(result), httpCode);
     });
   };
   const getAll = async (req, res) => {
@@ -97,8 +93,12 @@ const customerController = () => {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
         }
+        customerList = [];
+        for (i = 0; i< results.rows.length; i++) {
+          customerList.push(editCustomerBecomeSend(results.rows[i]))
+        }
         return oRest.sendSuccess(res, {
-          data: results.rows,
+          data: customerList,
           total: results.count
         }, httpCode);
     });
@@ -133,5 +133,10 @@ const customerController = () => {
     deleteCustomer
   };
 };
+
+const editCustomerBecomeSend = (customer) =>{
+  customer.isDelete = undefined;
+  return customer;
+}
 
 module.exports = customerController;

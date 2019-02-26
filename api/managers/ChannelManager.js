@@ -54,7 +54,7 @@ module.exports = {
     },
     getAll: function( queryContent, callback){
         try {
-            const categories = Channel.findAll(queryContent).then(listChannel => {
+            const categories = Channel.findAndCountAll(queryContent).then(listChannel => {
                 return callback(null,null,200, null, listChannel);
             });
         }catch(error){
