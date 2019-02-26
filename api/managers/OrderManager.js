@@ -73,7 +73,7 @@ module.exports = {
                                         return customer.updateAttributes({
                                             totalSpent : parseFloat(customer.totalSpent) + parseFloat(newTotalPrice)
                                         }, {transaction: t}).then (function (customer){
-                                            return orders
+                                            return orders[0];
                                         });
                                     }
                                 );

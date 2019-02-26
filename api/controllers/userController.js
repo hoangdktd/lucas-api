@@ -31,14 +31,15 @@ const UserController = () => {
               if (errorCode) {
                   return oRest.sendError(res, errorCode, errorMessage, httpCode);
               }
-              let oResData = {};
-              oResData.user = returnUser;
+              let oResData = editUserBecomeSend(returnUser);
               oResData.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
+              console.log(user)
               return oRest.sendSuccess(res, oResData, httpCode);
             }
           )
+        } else {
+          return oRest.sendError(res, 400, "User is already exits", 400);
         }
-        return oRest.sendError(res, 400, "User is already exits", 400);
       }
     );
   };
@@ -60,8 +61,7 @@ const UserController = () => {
             if (errorCode) {
                 return oRest.sendError(res, errorCode, errorMessage, httpCode);
             }
-            let oResData = {};
-            oResData.user = returnUser;
+            let oResData = editUserBecomeSend(returnUser);
             oResData.token = authService().issue({ userId: returnUser.userId, role: returnUser.userRole });
             return oRest.sendSuccess(res, oResData, httpCode);
           }
@@ -118,8 +118,7 @@ const UserController = () => {
               if (errorCode) {
                   return oRest.sendError(res, errorCode, errorMessage, httpCode);
               }
-              let oResData = {};
-              oResData.user = returnNewUser;
+              let oResData = editUserBecomeSend(returnNewUser);
               oResData.token = authService().issue({ userId: returnNewUser.userId, role: returnNewUser.userRole });
               return oRest.sendSuccess(res, oResData, httpCode);
             }
@@ -138,10 +137,8 @@ const UserController = () => {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode);
         }
-        const token = authService().issue({ userId: returnUser.id, role: returnUser.userRole }); // need check jwt hoangdktd
-        let oResData = {};
-        oResData.user = returnUser;
-        oResData.token = token;
+        let oResData = editUserBecomeSend(returnUser);
+        //oResData.token = authService().issue({ userId: returnUser.id, role: returnUser.userRole });
         return oRest.sendSuccess(res, returnUser, httpCode);
       }
     )
@@ -157,8 +154,12 @@ const UserController = () => {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode);
         }
+        usersList = []
+        for (i = 0; i < users.rows.length; i++) {
+          usersList.push(editUserBecomeSend(users.rows[i]))
+        }
         return oRest.sendSuccess(res, {
-          data: users.rows, total: users.count
+          data: usersList, total: users.count
         }, httpCode);
       }
     )
@@ -173,4 +174,16 @@ const UserController = () => {
   };
 };
 
+const editUserBecomeSend = (user) =>{
+  console.log(user);
+  data = {};
+  data.id = user.id;
+  data.email = user.email;
+  data.userType = user.userType;
+  data.displayName = user.displayName;
+  data.userRole = user.userRole;
+  data.updatedAt = user.updatedAt;
+  data.createdAt = user.createdAt;
+  return data
+}
 module.exports = UserController;
