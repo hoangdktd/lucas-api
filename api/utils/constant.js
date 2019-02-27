@@ -19,7 +19,7 @@ module.exports = {
     limitGetData: 'perPage',
     offsetGetData: 'page',
     keywordSearchText: 'q',
-    searchFieldInUserColumn: ['userId', 'displayName'],
+    searchFieldInUserColumn: ['id', 'displayName'],
     filterFieldInUserColumn: ['userType', 'userRole'],
     searchFieldInCustomerColumn: ['displayName', 'email', 'address'],
     filterFieldInCustomerColumn: ['displayName', 'email', 'address'],
@@ -34,5 +34,7 @@ module.exports = {
     searchFieldInOrderColumn: ['idPackage'],
     filterFieldInOrderColumn: ['idPackage', 'designerId', 'customerId', 'infoOrderLink', 'channel', 'saleId'],
     sortFieldInOrderColumn: ['priceOrder', 'createDate', 'updatedAt'],
+    sortFieldInUserColumn: ['userType', 'id', 'displayName'],
+    sortFieldInCustomerColumn: ['totalSpent', 'id', 'displayName'],
     orderStatus: ['ordered', 'delivered', 'cancelled']
 };

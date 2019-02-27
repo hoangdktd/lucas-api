@@ -146,7 +146,7 @@ const UserController = () => {
   const getAll = async (req, res) => {
     const { params } = req;
     const {query} = req;
-    attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInUserColumn, oConstant.searchFieldInUserColumn, null);
+    attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInUserColumn, oConstant.searchFieldInUserColumn, oConstant.sortFieldInUserColumn);
     await userManager.getAll(
       attr,
       function (errorCode, errorMessage, httpCode, users) {
@@ -162,14 +162,32 @@ const UserController = () => {
         }, httpCode);
       }
     )
-  }
+  };
+
+  const deleteManyUser = async (req, res) => {
+    const {body} = req;
+    console.log(body)
+    await userManager.deleteMany(
+        body,
+        function (errorCode, errorMessage, httpCode, returnOrderModel) {
+            if (errorCode) {
+                return oRest.sendError(res, errorCode, errorMessage, httpCode);
+            }
+            var oResData = {};
+            oResData.msg = 'users is deleted';
+            return oRest.sendSuccess(res, oResData, httpCode);
+        }
+    );
+  };
+
   return {
     update,
     deleteUser,
     changePassword,
     getOne,
     getAll,
-    createUser
+    createUser,
+    deleteManyUser
   };
 };
 

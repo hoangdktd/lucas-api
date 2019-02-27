@@ -53,7 +53,7 @@ module.exports = {
             const customer = await Customer.findById(queryContent.id);
 
             if(!customer) {
-                return callback(400, 'Bad Request: User not found', 400, null, null);
+                return callback(400, 'Bad Request: Channel not found', 400, null, null);
             }
 
             return callback(null,null,200, null, customer);
@@ -83,5 +83,29 @@ module.exports = {
         }catch(error){
             return callback(5170, 'system', 500, error, null);
         }
+    },
+
+    deleteMany: async function (params, callback) {
+        return Customer.sequelize.transaction(function (t) {
+            console.log('start transaction');
+            const customerPromises = [];
+
+            for (let i = 0; i < params.length; i++) {
+                const newPromise = Customer.findById(
+                    params[i]
+                , {transaction: t}).then(function(customer) {
+                    return customer.updateAttributes({
+                        isDelete : true
+                    }, {transaction: t})
+                })
+                customerPromises.push(newPromise);
+            }
+            return Promise.all(customerPromises).then(function (result) {
+                    return callback(null,null,200, result);
+            }).catch(function (err) {
+                console.log(err);
+                return callback(400, 'fail transaction', 400, null);
+            });
+        })
     },
 };

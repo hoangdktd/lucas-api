@@ -127,12 +127,28 @@ const orderController = () => {
         }
     );
   };
+  const deleteManyOrder = async (req, res) => {
+    const {body} = req;
+    console.log(body)
+    await orderManager.deleteMany(
+        body,
+        function (errorCode, errorMessage, httpCode, returnOrderModel) {
+            if (errorCode) {
+                return oRest.sendError(res, errorCode, errorMessage, httpCode);
+            }
+            var oResData = {};
+            oResData.msg = 'orders is deleted';
+            return oRest.sendSuccess(res, oResData, httpCode);
+        }
+    );
+  }
   return {
     createOrder,
     updateOrder,
     getOne,
     getAll,
-    deleteOrder
+    deleteOrder,
+    deleteManyOrder
   };
 };
 

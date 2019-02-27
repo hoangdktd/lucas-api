@@ -6,6 +6,7 @@ const userRoutes = {
     'PUT /:id': 'userController.update',
     'DELETE /:id': 'userController.deleteUser',
     'PUT /change-password/:id': 'userController.changePassword',
+    'DELETE /': 'userController.deleteManyUser'
 };
 
 module.exports = userRoutes;

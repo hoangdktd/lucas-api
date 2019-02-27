@@ -124,12 +124,29 @@ const channelController = () => {
         }
     );
   };
+
+  const deleteManyChannel = async (req, res) => {
+    const {body} = req;
+    console.log(body)
+    await channelManager.deleteMany(
+        body,
+        function (errorCode, errorMessage, httpCode, returnOrderModel) {
+            if (errorCode) {
+                return oRest.sendError(res, errorCode, errorMessage, httpCode);
+            }
+            var oResData = {};
+            oResData.msg = 'channels is deleted';
+            return oRest.sendSuccess(res, oResData, httpCode);
+        }
+    );
+  };
   return {
     createChannel,
     updateChannel,
     getOne,
     getAll,
-    deleteChannel
+    deleteChannel,
+    deleteManyChannel
   };
 };
 

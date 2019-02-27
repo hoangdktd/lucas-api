@@ -88,7 +88,7 @@ const customerController = () => {
   const getAll = async (req, res) => {
     const { params } = req;
     const {query} = req;
-    const attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInCustomerColumn, oConstant.searchFieldInCustomerColumn, null);
+    const attr = extraFuncQuery.filterAndSearch(query, oConstant.filterFieldInCustomerColumn, oConstant.searchFieldInCustomerColumn, oConstant.sortFieldInCustomerColumn);
     await customerManager.getAll( attr, function (errorCode, errorMessage, httpCode, errorDescription, results) {
         if (errorCode) {
             return oRest.sendError(res, errorCode, errorMessage, httpCode, errorDescription);
@@ -125,12 +125,30 @@ const customerController = () => {
         }
     );
   };
+
+  const deleteManyCustomer = async (req, res) => {
+    const {body} = req;
+    console.log(body)
+    await customerManager.deleteMany(
+        body,
+        function (errorCode, errorMessage, httpCode, returnOrderModel) {
+            if (errorCode) {
+                return oRest.sendError(res, errorCode, errorMessage, httpCode);
+            }
+            var oResData = {};
+            oResData.msg = 'customers is deleted';
+            return oRest.sendSuccess(res, oResData, httpCode);
+        }
+    );
+  };
+
   return {
     createCustomer,
     updateCustomer,
     getOne,
     getAll,
-    deleteCustomer
+    deleteCustomer,
+    deleteManyCustomer
   };
 };
 

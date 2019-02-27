@@ -3,7 +3,8 @@ const customerRoutes = {
     'GET /': 'customerController.getAll',
     'PUT /:id': 'customerController.updateCustomer',
     'GET /:id': 'customerController.getOne',
-    'DELETE /:id': 'customerController.deleteCustomer'
+    'DELETE /:id': 'customerController.deleteCustomer',
+    'DELETE /': 'customerController.deleteManyCustomer'
 };
 
 module.exports = customerRoutes;

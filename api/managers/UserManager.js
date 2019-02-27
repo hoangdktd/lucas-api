@@ -103,6 +103,30 @@ module.exports = {
           return callback(500, 'Internal server error', 500, null);
         //   return res.status(500).json({ msg: 'Internal server error' });
         }
-    }
+    },
+
+    deleteMany: async function (params, callback) {
+        return User.sequelize.transaction(function (t) {
+            console.log('start transaction');
+            const userPromises = [];
+
+            for (let i = 0; i < params.length; i++) {
+                const newPromise = User.findById(
+                    params[i]
+                , {transaction: t}).then(function(user) {
+                    return user.updateAttributes({
+                        isDelete : true
+                    }, {transaction: t})
+                })
+                userPromises.push(newPromise);
+            }
+            return Promise.all(userPromises).then(function (result) {
+                    return callback(null,null,200, result);
+            }).catch(function (err) {
+                console.log(err);
+                return callback(400, 'fail transaction', 400, null);
+            });
+        })
+    },
 
 };

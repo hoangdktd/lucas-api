@@ -3,7 +3,8 @@ const channelRoutes = {
     'GET /': 'channelController.getAll',
     'PUT /:id': 'channelController.updateChannel',
     'GET /:id': 'channelController.getOne',
-    'DELETE /:id': 'channelController.deleteChannel'
+    'DELETE /:id': 'channelController.deleteChannel',
+    'DELETE /': 'channelController.deleteManyChannel'
 };
 
 module.exports = channelRoutes;

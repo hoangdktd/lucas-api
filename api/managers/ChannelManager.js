@@ -44,7 +44,7 @@ module.exports = {
             const channel = await Channel.findById(params.id);
 
             if(!channel) {
-                return callback(400, 'Bad Request: User not found', 400, null, null);
+                return callback(400, 'Bad Request: cHannel not found', 400, null, null);
             }
 
             return callback(null,null,200, null, channel);
@@ -75,5 +75,29 @@ module.exports = {
             console.log(error)
             return callback(5170, 'system', 500, error, null);
         }
+    },
+
+    deleteMany: async function (params, callback) {
+        return Channel.sequelize.transaction(function (t) {
+            console.log('start transaction');
+            const channelPromises = [];
+
+            for (let i = 0; i < params.length; i++) {
+                const newPromise = Channel.findById(
+                    params[i]
+                , {transaction: t}).then(function(channel) {
+                    return channel.updateAttributes({
+                        isDelete : true
+                    }, {transaction: t})
+                })
+                channelPromises.push(newPromise);
+            }
+            return Promise.all(channelPromises).then(function (result) {
+                    return callback(null,null,200, result);
+            }).catch(function (err) {
+                console.log(err);
+                return callback(400, 'fail transaction', 400, null);
+            });
+        })
     },
 };

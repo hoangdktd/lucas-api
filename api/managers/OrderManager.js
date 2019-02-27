@@ -233,11 +233,11 @@ module.exports = {
                 console.log('start transaction');
                 return Order.findById(
                     params.id
-                , {transaction: t}).then(function(orders) {
-                    return orders.updateAttributes({
+                , {transaction: t}).then(function(order) {
+                    return order.updateAttributes({
                         isDelete : true
-                    }, {transaction: t}).then(function(orders) {
-                            return Customer.findById(orders.customerId, {transaction: t}).
+                    }, {transaction: t}).then(function(order) {
+                            return Customer.findById(order.customerId, {transaction: t}).
                                 then((customer) =>{
                                     return customer.updateAttributes({
                                         totalSpent : parseFloat(customer.totalSpent) - parseFloat(order.priceOrder)
@@ -252,6 +252,7 @@ module.exports = {
                 // result is whatever the result of the promise chain returned to the transaction callback
                 return callback(null,null,200, result);
             }).catch(function (err) {
+                console.log(err);
                 // Transaction has been rolled back
                 // err is whatever rejected the promise chain returned to the transaction callback
                 return callback(400, 'fail transaction', 400, null);
@@ -259,6 +260,52 @@ module.exports = {
         } catch (error) {
             return callback(5170, 'system', 500, error, null);
         }
+    },
+
+    deleteMany: async function (params, callback) {
+        return Order.sequelize.transaction(function (t) {
+            console.log('start transaction');
+            const orderPromises = [];
+            let priceByCustomer = {};
+
+            for (let i = 0; i < params.length; i++) {
+                const newPromise = Order.findById(
+                    params[i]
+                , {transaction: t}).then(function(order) {
+                    if (order.customerId in priceByCustomer) {
+                        priceByCustomer[order.customerId] += parseFloat(order.priceOrder)
+                    } else {
+                        priceByCustomer[order.customerId] = parseFloat(order.priceOrder)
+                    }
+                    return order.updateAttributes({
+                        isDelete : true
+                    }, {transaction: t})
+                })
+                
+                orderPromises.push(newPromise);
+            }
+            return Promise.all(orderPromises).then(function (result) {
+                const customerPromises = [];
+                for (let customerId in priceByCustomer ) {
+                    customerPromises.push(
+                        Customer.findById(
+                            customerId
+                        , {transaction: t}).then(function(customer){
+                            return customer.updateAttributes({
+                                totalSpent : parseFloat(customer.totalSpent) - parseFloat(priceByCustomer[customerId])
+                            });
+                        })
+                    )
+                }
+                return Promise.all(customerPromises).then(function(result){
+                    return callback(null,null,200, result);
+                })
+                
+            }).catch(function (err) {
+                console.log(err);
+                return callback(400, 'fail transaction', 400, null);
+            });
+        })
     },
 
     isPackageIdUnique: function (idPackage) {
