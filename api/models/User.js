@@ -14,7 +14,7 @@ const hooks = {
 };
 
 // naming the table in DB
-const tableName = 'user';
+const tableName = 'tbuser';
 
 // the actual model
 const User = sequelize.define('User', {

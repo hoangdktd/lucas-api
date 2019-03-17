@@ -1,0 +1,13 @@
+# [START app_yaml]
+runtime: nodejs
+env: flex
+env_variables:
+  DB_USER: postgres
+  DB_PASS: lucaspostgresql
+  DB_NAME: postgres
+  DB_HOST: /cloudsql/lucasapi-234803:asia-southeast1:lucaspostgresql
+  POSTGRES_SOCKET_PATH: /cloudsql/lucasapi-234803:asia-southeast1:lucaspostgresql
+
+beta_settings:
+  cloud_sql_instances: lucasapi-234803:asia-southeast1:lucaspostgresql
+# [END app_yaml]
