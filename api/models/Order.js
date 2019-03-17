@@ -19,10 +19,11 @@ const tableName = 'order';
 
 // the actual model
 const Order = sequelize.define('order', {
-  // orderId: {
-  //   type: Sequelize.STRING,
-  //   unique: true,
-  // },
+  id: {
+    type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV1,
+    primaryKey: true
+  },
   status: {
     type: Sequelize.ENUM,   //'ordered', 'delivered', 'cancelled'
     values: oConstant.orderStatusEnum
