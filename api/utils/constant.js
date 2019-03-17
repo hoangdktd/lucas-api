@@ -10,7 +10,7 @@ module.exports = {
     serverSuccessCode: 200,
     token: 'X-Access-Token',
     masterKey: "phamduylaideptrai",
-    userTypeList : ['admin', 'saler', 'deliver', 'designer'],
+    userTypeList : ['Admin', 'Salesman', 'Delivery Staff', 'Designer'],
     userRoleAdmin: 0,
     userRoleSaler: 1,
     userRoleDeliver: 2,
